@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "346554927884",
+    "firebase_url": "https://studyspace-92552.firebaseio.com",
+    "project_id": "studyspace-92552",
+    "storage_bucket": "studyspace-92552.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346554927884:android:808095a85c2c793e",
+        "android_client_info": {
+          "package_name": "com.austinabell8.studyspace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "346554927884-93nup8ir3vf4cg33fp1jkus0juinr9cs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.austinabell8.studyspace",
+            "certificate_hash": "2e206ef1f9d0c0f9aefb8906b1851757c859dcb5"
+          }
+        },
+        {
+          "client_id": "346554927884-0g89g6vtpeh4oqq8jigdhp2hn9m56754.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCF5iympBbvqxqKCR_FTk6j1KXuqgTIiks"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "346554927884-0g89g6vtpeh4oqq8jigdhp2hn9m56754.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

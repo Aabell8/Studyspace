@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Studyspace</string>
+    <string name="facebook_app_id">326384861170355</string>
+    <string name="fb_login_protocol_scheme">fb875333829286542</string>
+
+    <string name="authenticating">Authenticating...</string>
+    <string name="password">Password</string>
+    <string name="creating_user">Creating User</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="hint_email">Email</string>
+    <string name="email">Email</string>
+    <string name="log_out">Log Out</string>
+    <string name="logging_in">Logging in</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="posts">posts</string>
+    <string name="new_post">new</string>
+    <string name="messages">Messages</string>
+    <string name="profile">Profile</string>
+    <string name="create">create</string>
+    <string name="create_account">No account yet? Create one</string>
+    <string name="Search">search</string>
+</resources>
