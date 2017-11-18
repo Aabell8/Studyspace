@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +28,9 @@ import com.austinabell8.studyspace.helpers.LockableViewPager;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
 
 public class StudentActivity extends AppCompatActivity
         implements CreateFragment.OnFragmentInteractionListener,
@@ -42,6 +44,8 @@ public class StudentActivity extends AppCompatActivity
     private MessagesFragment mMessagesFragment;
     private ProfileFragment mProfileFragment;
 
+    private static final int GALLERY_INTENT=2;
+
     private LockableViewPager viewPager;
     private BottomNavigationView navigation;
 
@@ -51,6 +55,10 @@ public class StudentActivity extends AppCompatActivity
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private StorageReference mStorage;
+    private String currentUserId;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mCurrentUserDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +67,7 @@ public class StudentActivity extends AppCompatActivity
         setContentView(R.layout.activity_student);
 
         initView();
+        initializeData();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -69,7 +78,6 @@ public class StudentActivity extends AppCompatActivity
                     logout();
                 } else {
                     // User is signed out
-
                 }
 
             }
@@ -147,7 +155,6 @@ public class StudentActivity extends AppCompatActivity
         viewPager = findViewById(R.id.view_pager_bottom_navigation);
         viewPager.setAdapter(mSectionsPagerAdapter);
         viewPager.addOnPageChangeListener(pageChangeListener);
-        viewPager.setSwipeLocked(true);
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -161,18 +168,18 @@ public class StudentActivity extends AppCompatActivity
             switch (item.getItemId()) {
                 case R.id.navigation_posts:
                     viewPager.setCurrentItem(0);
-                    viewPager.setSwipeLocked(false);
+                    viewPager.setSwipeLocked(true);
                     return true;
-                case R.id.navigation_create:
+//                case R.id.navigation_create:
+//                    viewPager.setCurrentItem(1);
+//                    viewPager.setSwipeLocked(false);
+//                    return true;
+                case R.id.navigation_messages:
                     viewPager.setCurrentItem(1);
                     viewPager.setSwipeLocked(false);
                     return true;
-                case R.id.navigation_messages:
-                    viewPager.setCurrentItem(2);
-                    viewPager.setSwipeLocked(false);
-                    return true;
                 case R.id.navigation_profile:
-                    viewPager.setCurrentItem(3);
+                    viewPager.setCurrentItem(2);
                     viewPager.setSwipeLocked(false);
                     return true;
             }
@@ -192,13 +199,13 @@ public class StudentActivity extends AppCompatActivity
                 case 0:
                     navigation.setSelectedItemId(R.id.navigation_posts);
                     break;
+//                case 1:
+//                    navigation.setSelectedItemId(R.id.navigation_create);
+//                    break;
                 case 1:
-                    navigation.setSelectedItemId(R.id.navigation_create);
-                    break;
-                case 2:
                     navigation.setSelectedItemId(R.id.navigation_messages);
                     break;
-                case 3:
+                case 2:
                     navigation.setSelectedItemId(R.id.navigation_profile);
                     break;
             }
@@ -232,6 +239,15 @@ public class StudentActivity extends AppCompatActivity
         }
     }
 
+    private void initializeData(){
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        currentUserId = mFirebaseAuth.getCurrentUser().getUid();
+        mCurrentUserDatabaseReference = mFirebaseDatabase
+                .getReference().child("users"
+                        + "/" + currentUserId);
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -244,13 +260,13 @@ public class StudentActivity extends AppCompatActivity
                 case 0:
                     fragment = new PostsFragment();
                     break;
+//                case 1:
+//                    fragment = new CreateFragment();
+//                    break;
                 case 1:
-                    fragment = new CreateFragment();
-                    break;
-                case 2:
                     fragment = new MessagesFragment();
                     break;
-                case 3:
+                case 2:
                     fragment = new ProfileFragment();
             }
             return fragment;
@@ -264,13 +280,13 @@ public class StudentActivity extends AppCompatActivity
                 case 0:
                     mPostsFragment = (PostsFragment) createdFragment;
                     break;
+//                case 1:
+//                    mCreateFragment = (CreateFragment) createdFragment;
+//                    break;
                 case 1:
-                    mCreateFragment = (CreateFragment) createdFragment;
-                    break;
-                case 2:
                     mMessagesFragment = (MessagesFragment) createdFragment;
                     break;
-                case 3:
+                case 2:
                     mProfileFragment = (ProfileFragment) createdFragment;
                     break;
             }
@@ -279,8 +295,9 @@ public class StudentActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
+
 
     }
 

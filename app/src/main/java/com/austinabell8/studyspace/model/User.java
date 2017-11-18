@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace;
+package com.austinabell8.studyspace.model;
 
 public class User {
 
@@ -7,6 +7,11 @@ public class User {
     private String role;
     private String fullName;
     private String age;
+    private String profilePicLocation;
+
+    public User(){
+
+    }
 
     public User(String _username, String _email, String _fullName, String _age){
         username = _username;
@@ -54,5 +59,9 @@ public class User {
 
     public void setAge(String age) {
         this.age = age;
+    }
+
+    public String getProfilePicLocation() {
+        return profilePicLocation;
     }
 }

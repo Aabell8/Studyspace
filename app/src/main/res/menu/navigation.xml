@@ -6,10 +6,10 @@
         android:icon="@drawable/ic_view_list_black_24dp"
         android:title="@string/posts" />
 
-    <item
-        android:id="@+id/navigation_create"
-        android:icon="@drawable/ic_add_box_black_24dp"
-        android:title="@string/create" />
+    <!--<item-->
+        <!--android:id="@+id/navigation_create"-->
+        <!--android:icon="@drawable/ic_add_box_black_24dp"-->
+        <!--android:title="@string/create" />-->
 
     <item
         android:id="@+id/navigation_messages"

@@ -28,6 +28,9 @@ import com.austinabell8.studyspace.helpers.LockableViewPager;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
 
 public class TutorActivity extends AppCompatActivity
         implements SearchFragment.OnFragmentInteractionListener,
@@ -50,6 +53,8 @@ public class TutorActivity extends AppCompatActivity
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private String currentUserId;
+    private FirebaseDatabase mFirebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,7 @@ public class TutorActivity extends AppCompatActivity
         setContentView(R.layout.activity_tutor);
 
         initView();
+        initializeData();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -225,6 +231,12 @@ public class TutorActivity extends AppCompatActivity
                 logout();
                 break;
         }
+    }
+
+    private void initializeData(){
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        currentUserId = mFirebaseAuth.getCurrentUser().getUid();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
