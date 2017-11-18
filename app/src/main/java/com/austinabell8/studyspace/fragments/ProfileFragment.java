@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.activities.StudentActivity;
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -74,7 +75,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.log_out_button:
-                ((StudentActivity) getActivity()).logout();
+                LoginManager.getInstance().logOut();
+                FirebaseAuth.getInstance().signOut();
                 break;
         }
     }

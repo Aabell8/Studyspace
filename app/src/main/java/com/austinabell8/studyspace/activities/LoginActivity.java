@@ -35,6 +35,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,16 +49,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     ProgressDialog progressDialog;
     private Button mLoginBtn;
-    private TextView mSignUpBtn;
+    private TextView mSignupButton;
     private EditText mEmail;
     private EditText mPassword;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mRootRef;
 
     private SharedPreferences mPreferences;
 
-    private static final String TAG = "Instacram.LoginActivity";
+    private static final String TAG = "SS.LoginActivity";
 //    private static final int RC_SIGN_IN = 123;
 
     @Override
@@ -68,19 +74,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         LoginManager.getInstance().logOut();
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mRootRef = FirebaseDatabase.getInstance().getReference();
 
         if (isLoggedIn()){
-            Intent mainIntent = new Intent (LoginActivity.this, StudentActivity.class);
-            LoginActivity.this.finish();
-            LoginActivity.this.startActivity(mainIntent);
+           completeIntent();
         }
 
         setContentView(R.layout.activity_login);
         FBLoginButton = findViewById(R.id.facebook_login_button);
         mLoginBtn = findViewById(R.id.login_button);
         mLoginBtn.setOnClickListener(this);
-        mSignUpBtn = findViewById(R.id.signup_link);
-        mSignUpBtn.setOnClickListener(this);
+        mSignupButton = findViewById(R.id.signup_link);
+        mSignupButton.setOnClickListener(this);
         mEmail = findViewById(R.id.input_email);
         mPassword = findViewById(R.id.input_password);
         mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -163,10 +168,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         SharedPreferences.Editor prefEditor = mPreferences.edit();
                                         prefEditor.putString("email", mEmail.getText().toString());
                                         prefEditor.apply();
-                                        Intent mainIntent = new Intent (LoginActivity.this, StudentActivity.class);
-                                        LoginActivity.this.finish();
-                                        LoginActivity.this.startActivity(mainIntent);
                                         progressDialog.hide();
+                                        completeIntent();
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -181,34 +184,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 break;
             case R.id.signup_link:
-                if (!mEmail.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()){
-                    progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
-                    progressDialog.setMessage(getString(R.string.creating_user));
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-                    mFirebaseAuth.createUserWithEmailAndPassword(
-                            mEmail.getText().toString(), mPassword.getText().toString())
-                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d(TAG, "createUserWithEmail:success");
-                                        SharedPreferences.Editor prefEditor = mPreferences.edit();
-                                        prefEditor.putString("email", mEmail.getText().toString());
-                                        prefEditor.apply();
-                                        progressDialog.hide();
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                        Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                                Toast.LENGTH_SHORT).show();
-                                        progressDialog.hide();
-                                    }
-                                }
-
-                            });
-                }
+                Intent intent = new Intent (LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
                 break;
         }
     }
@@ -277,6 +255,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return mFirebaseAuth.getCurrentUser() != null;
 //        AccessToken accessToken = AccessToken.getCurrentAccessToken();
 //        return accessToken != null;
+    }
+
+    private void completeIntent(){
+        DatabaseReference ref = mRootRef.child("users").child(mFirebaseAuth.getCurrentUser().getUid()).child("role");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String role = dataSnapshot.getValue(String.class);
+                Intent intent;
+                if (role.equals("N")){
+                    intent = new Intent (LoginActivity.this, RoleActivity.class);
+                    startActivity(intent);
+                }
+                else if (role.equals("S")){
+                    intent = new Intent (LoginActivity.this, StudentActivity.class);
+                    startActivity(intent);
+                }
+                else if (role.equals("T")){
+                    intent = new Intent (LoginActivity.this, TutorActivity.class);
+                    startActivity(intent);
+                }
+                finish();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     public static void hideKeyboard(Activity activity) {

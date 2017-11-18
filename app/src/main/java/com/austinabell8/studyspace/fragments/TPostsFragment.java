@@ -11,17 +11,17 @@ import android.view.ViewGroup;
 import com.austinabell8.studyspace.R;
 
 
-public class SearchFragment extends Fragment implements View.OnClickListener {
+public class TPostsFragment extends Fragment implements View.OnClickListener {
 
-    private SearchFragment.OnFragmentInteractionListener mListener;
+    private TPostsFragment.OnFragmentInteractionListener mListener;
     private View inflatedCustomerLookup;
 
-    public SearchFragment() {
+    public TPostsFragment() {
         // Required empty public constructor
     }
 
-    public static SearchFragment newInstance() {
-        SearchFragment fragment = new SearchFragment();
+    public static TPostsFragment newInstance() {
+        TPostsFragment fragment = new TPostsFragment();
         return fragment;
     }
 
@@ -32,7 +32,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        inflatedCustomerLookup = inflater.inflate(R.layout.fragment_search, container, false);
+        inflatedCustomerLookup = inflater.inflate(R.layout.fragment_t_posts, container, false);
 
         return inflatedCustomerLookup;
     }
@@ -40,8 +40,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof SearchFragment.OnFragmentInteractionListener) {
-            mListener = (SearchFragment.OnFragmentInteractionListener) context;
+        if (context instanceof TPostsFragment.OnFragmentInteractionListener) {
+            mListener = (TPostsFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

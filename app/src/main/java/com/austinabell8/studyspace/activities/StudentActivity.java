@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ import com.austinabell8.studyspace.helpers.BottomNavigationViewHelper;
 import com.austinabell8.studyspace.helpers.LockableViewPager;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class StudentActivity extends AppCompatActivity
         implements CreateFragment.OnFragmentInteractionListener,
@@ -47,6 +49,9 @@ public class StudentActivity extends AppCompatActivity
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +59,21 @@ public class StudentActivity extends AppCompatActivity
         setContentView(R.layout.activity_student);
 
         initView();
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    logout();
+                } else {
+                    // User is signed out
+
+                }
+
+            }
+        };
 
         //default discover tab on open
         View view = navigation.findViewById(R.id.navigation_posts);
@@ -81,6 +101,24 @@ public class StudentActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
         //you can leave it empty
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mFirebaseAuth.removeAuthStateListener(mAuthListener);
     }
 
     @Override
@@ -173,7 +211,6 @@ public class StudentActivity extends AppCompatActivity
     };
     public void logout() {
         LoginManager.getInstance().logOut();
-        FirebaseAuth.getInstance().signOut();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Toast.makeText(StudentActivity.this, "Logout failed.",

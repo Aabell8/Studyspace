@@ -21,4 +21,7 @@
     <string name="create">create</string>
     <string name="create_account">No account yet? Create one</string>
     <string name="Search">search</string>
+    <string name="choose_your_role">Choose your role</string>
+    <string name="tutor">Tutor</string>
+    <string name="student">Student</string>
 </resources>

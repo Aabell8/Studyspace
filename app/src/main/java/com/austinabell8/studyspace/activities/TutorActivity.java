@@ -20,22 +20,23 @@ import android.widget.Toast;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.fragments.MessagesFragment;
-import com.austinabell8.studyspace.fragments.PostsFragment;
+import com.austinabell8.studyspace.fragments.TPostsFragment;
 import com.austinabell8.studyspace.fragments.ProfileFragment;
 import com.austinabell8.studyspace.fragments.SearchFragment;
 import com.austinabell8.studyspace.helpers.BottomNavigationViewHelper;
 import com.austinabell8.studyspace.helpers.LockableViewPager;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class TutorActivity extends AppCompatActivity
         implements SearchFragment.OnFragmentInteractionListener,
         MessagesFragment.OnFragmentInteractionListener,
-        PostsFragment.OnFragmentInteractionListener,
+        TPostsFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener,
         View.OnClickListener {
 
-    private PostsFragment mPostsFragment;
+    private TPostsFragment mTPostsFragment;
     private SearchFragment mSearchFragment;
     private MessagesFragment mMessagesFragment;
     private ProfileFragment mProfileFragment;
@@ -47,6 +48,9 @@ public class TutorActivity extends AppCompatActivity
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +58,17 @@ public class TutorActivity extends AppCompatActivity
         setContentView(R.layout.activity_tutor);
 
         initView();
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    logout();
+                }
+            }
+        };
 
         //default discover tab on open
         View view = navigation.findViewById(R.id.navigation_posts);
@@ -81,6 +96,24 @@ public class TutorActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
         //you can leave it empty
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mFirebaseAuth.removeAuthStateListener(mAuthListener);
     }
 
     @Override
@@ -173,7 +206,6 @@ public class TutorActivity extends AppCompatActivity
     };
     public void logout() {
         LoginManager.getInstance().logOut();
-        FirebaseAuth.getInstance().signOut();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Toast.makeText(TutorActivity.this, "Logout failed.",
@@ -205,7 +237,7 @@ public class TutorActivity extends AppCompatActivity
             Fragment fragment = null;
             switch(position) {
                 case 0:
-                    fragment = new PostsFragment();
+                    fragment = new TPostsFragment();
                     break;
                 case 1:
                     fragment = new SearchFragment();
@@ -225,7 +257,7 @@ public class TutorActivity extends AppCompatActivity
             // save the appropriate reference depending on position
             switch (position) {
                 case 0:
-                    mPostsFragment = (PostsFragment) createdFragment;
+                    mTPostsFragment = (TPostsFragment) createdFragment;
                     break;
                 case 1:
                     mSearchFragment = (SearchFragment) createdFragment;
