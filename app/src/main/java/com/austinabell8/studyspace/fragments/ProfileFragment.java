@@ -52,6 +52,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private ImageButton mPhotoPickerButton;
     private TextView mNameText;
     private TextView mUsernameText;
+    private ImageView mImageView;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -87,6 +88,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         mLogoutButton.setOnClickListener(this);
         mNameText = inflatedProfile.findViewById(R.id.name_text);
         mUsernameText = inflatedProfile.findViewById(R.id.username_text);
+
+        mImageView = inflatedProfile.findViewById(R.id.profilePicture);
+        Glide.with(getContext())
+                .load(R.drawable.com_facebook_profile_picture_blank_portrait)
+                .transform(new CircleTransform(getContext()))
+                .into(mImageView);
+
 
         mCurrentUserDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -165,6 +173,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             final String uniqueId = UUID.randomUUID().toString();
             final StorageReference filepath = mStorage.child(imageLocation).child(uniqueId + "/profile_pic");
             final String downloadURl = filepath.getPath();
+
             filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -175,7 +184,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         public void onComplete(@NonNull Task<Void> task) {
                             StorageReference storageRef = FirebaseStorage.getInstance()
                                     .getReference().child(downloadURl);
-                            storageRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            storageRef.getBytes(1024*1024 * 5).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
                                     Glide.with(getContext())

@@ -66,9 +66,11 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.PostCreateActivity"
-            android:parentActivityName=".activities.StudentActivity"/>
-        <activity android:name=".activities.SearchActivity"></activity>
+        <activity
+            android:name=".activities.PostCreateActivity"
+            android:parentActivityName=".activities.StudentActivity" />
+        <activity android:name=".activities.SearchActivity" />
+        <activity android:name=".activities.PostActivity"></activity>
     </application>
 
 </manifest>

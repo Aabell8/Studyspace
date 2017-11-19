@@ -1,10 +1,12 @@
 package com.austinabell8.studyspace.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +15,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,13 +24,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.austinabell8.studyspace.R;
+import com.austinabell8.studyspace.activities.LoginActivity;
 import com.austinabell8.studyspace.activities.PostCreateActivity;
+import com.austinabell8.studyspace.activities.RoleActivity;
+import com.austinabell8.studyspace.activities.StudentActivity;
+import com.austinabell8.studyspace.activities.TutorActivity;
 import com.austinabell8.studyspace.adapters.PostRecyclerAdapter;
 import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
 import com.austinabell8.studyspace.helpers.SwipeUtil;
 import com.austinabell8.studyspace.model.Post;
+import com.austinabell8.studyspace.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 
 public class PostsFragment extends Fragment implements View.OnClickListener {
@@ -38,11 +54,16 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
     private View inflatedPosts;
     private RecyclerView mRecyclerView;
-    private ArrayList<Post> arrayOfPosts;
+    private ArrayList<Post> posts;
     private PostRecyclerAdapter mPostRecyclerAdapter;
     private LinearLayoutManager llm;
     private FloatingActionButton mFab;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private RecyclerViewClickListener mRecyclerViewClickListener;
+
+    private DatabaseReference mRootRef;
+    private DatabaseReference mPostRef;
 //    private Menu optionsMenu;
 
     public PostsFragment() {
@@ -60,16 +81,44 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         inflatedPosts = inflater.inflate(R.layout.fragment_posts, container, false);
 
-        populatePostsList();
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+        mPostRef = mRootRef.child("posts");
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) inflatedPosts.findViewById(R.id.swipe_refresh_layout_posts);
+        mRecyclerView = inflatedPosts.findViewById(R.id.rvPosts);
+
+        mRecyclerView.setHasFixedSize(true);
+        llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(llm);
+
+        posts = new ArrayList<>();
+
+        mPostRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                posts.clear();
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    Post nPost = postSnapshot.getValue(Post.class);
+                    posts.add(nPost);
+                    (mRecyclerView.getAdapter()).notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        mSwipeRefreshLayout = inflatedPosts.findViewById(R.id.swipe_refresh_layout_posts);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mPostRecyclerAdapter.removePending();
+                        if (mPostRecyclerAdapter!=null){
+                            mPostRecyclerAdapter.removePending();
+                        }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }, 100);
@@ -77,28 +126,22 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(),
-                arrayOfPosts, new RecyclerViewClickListener() {
+        mRecyclerViewClickListener = new RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
-//                Intent intent = new Intent(getActivity(), PostDetailsActivity.class);
-//                intent.putExtra("post_item", arrayOfposts.get(position));
-//                startActivity(intent);
-            }
-        });
 
+            }
+        };
+
+        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
         mRecyclerView.setAdapter(mPostRecyclerAdapter);
         setSwipeForRecyclerView();
-
-        mPostRecyclerAdapter.sortByName();
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
             }
-
-
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
@@ -107,6 +150,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
+
 
         return inflatedPosts;
     }
@@ -215,8 +259,8 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
 
     private void populatePostsList(){
         // Construct the data source
-        if (arrayOfPosts == null){
-            arrayOfPosts = Post.getPosts();
+        if (posts == null){
+            posts = Post.getPosts();
         }
 
         mRecyclerView = inflatedPosts.findViewById(R.id.rvPosts);
@@ -236,7 +280,6 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setSwipeForRecyclerView() {
-
         SwipeUtil swipeHelper = new SwipeUtil(0, ItemTouchHelper.LEFT, getActivity()) {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
@@ -244,7 +287,6 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                 PostRecyclerAdapter adapter = (PostRecyclerAdapter) mRecyclerView.getAdapter();
                 adapter.pendingRemoval(swipedPosition);
             }
-
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
@@ -263,8 +305,59 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         swipeHelper.setLeftColorCode(ContextCompat.getColor(getActivity(), R.color.md_red_800));
     }
 
-    public void CreatePost() {
-        Intent intent = new Intent(this.getActivity(), PostCreateActivity.class);
-        startActivity(intent);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                Bundle b = data.getExtras();
+                final Post post = b.getParcelable("post_item");
+                post.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                DatabaseReference ref = mRootRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("fullName");
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String name = dataSnapshot.getValue(String.class);
+                        post.setName(name);
+                        post.setStatus("Active");
+                        final String uniqueId = UUID.randomUUID().toString();
+                        mPostRef.child(uniqueId).setValue(post);
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
+
+    public void CreatePost() {
+        Intent i = new Intent(this.getActivity(), PostCreateActivity.class);
+        startActivityForResult(i, 1);
+    }
+
+    private void getAllPosts(DataSnapshot dataSnapshot){
+        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+            Post nPost = singleSnapshot.getValue(Post.class);
+            posts.add(nPost);
+            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
+            mRecyclerView.setAdapter(mPostRecyclerAdapter);
+        }
+    }
+//    private void deletePost(DataSnapshot dataSnapshot){
+//        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+//            String taskTitle = singleSnapshot.getValue(String.class);
+//            for(int i = 0; i < posts.size(); i++){
+//                if(posts.get(i).getTask().equals(taskTitle)){
+//                    posts.remove(i);
+//                }
+//            }
+//            mPostRecyclerAdapter.notifyDataSetChanged();
+////            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
+////            mRecyclerView.setAdapter(mPostRecyclerAdapter);
+//        }
+//    }
 }

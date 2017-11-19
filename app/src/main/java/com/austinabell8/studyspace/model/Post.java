@@ -15,28 +15,30 @@ public class Post implements Comparable<Post>, Parcelable {
 
     private String name;
     private String course;
-    private String Id;
+    private String description;
     private String price;
     private String status;
+    private String uid;
 
     public Post(){
 
     }
 
-    public Post(String name, String course, String id, String price, String status){
+    public Post(String name, String course, String description, String price, String status, String uid){
         this.name = name;
         this.course = course;
-        this.Id = id;
+        this.description = description;
         this.price = price;
         this.status = status;
+        this.uid = uid;
     }
 
     public static ArrayList<Post> getPosts(){
         ArrayList<Post> posts = new ArrayList<>();
-        posts.add(new Post("Austin Abell", "STATS 2141A", "1 hour tutor Session", "$40.00", "Active"));
-        posts.add(new Post("Austin Abell", "BUSINESS 2257A", "1 hour review", "$30.00", "Active"));
-        posts.add(new Post("Austin Abell", "PHILOSOP 2032F", "2 hour tutor Session", "$60.00", "Active"));
-        posts.add(new Post("Austin Abell", "CALC 1501A", "1.5 hour exam preparation for upcoming exam on thursday", "$35.00", "Active"));
+        posts.add(new Post("Austin Abell", "STATS 2141A", "1 hour tutor Session", "$40.00", "Active", ""));
+        posts.add(new Post("Austin Abell", "BUSINESS 2257A", "1 hour review", "$30.00", "Active", ""));
+        posts.add(new Post("Austin Abell", "PHILOSOP 2032F", "2 hour tutor Session", "$60.00", "Active", ""));
+        posts.add(new Post("Austin Abell", "CALC 1501A", "1.5 hour exam preparation for upcoming exam on thursday", "$35.00", "Active", ""));
         return posts;
     }
 
@@ -56,12 +58,12 @@ public class Post implements Comparable<Post>, Parcelable {
         this.course = course;
     }
 
-    public String getId() {
-        return Id;
+    public String getDescription() {
+        return description;
     }
 
-    public void setId(String Id) {
-        this.Id = Id;
+    public void setDescription(String Id) {
+        this.description = Id;
     }
 
     public String getPrice() {
@@ -78,6 +80,14 @@ public class Post implements Comparable<Post>, Parcelable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     @Override
@@ -98,9 +108,10 @@ public class Post implements Comparable<Post>, Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(name);
         out.writeString(course);
-        out.writeString(Id);
+        out.writeString(description);
         out.writeString(price);
         out.writeString(status);
+        out.writeString(uid);
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -117,9 +128,40 @@ public class Post implements Comparable<Post>, Parcelable {
     private Post(Parcel in) {
         name = in.readString();
         course = in.readString();
-        Id = in.readString();
+        description = in.readString();
         price = in.readString();
         status = in.readString();
+        uid = in.readString();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Post)) {
+            return false;
+        }
+        Post that = (Post) other;
+        // Custom equality check here.
+
+        return this.name.equals(that.name)
+                && this.course.equals(that.course)
+                && this.description.equals(that.description)
+                && this.price.equals(that.price)
+//                && this.status.equals(that.status)
+                && this.uid.equals(that.uid);
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+
+        hashCode = hashCode * 37 + this.name.hashCode();
+        hashCode = hashCode * 37 + this.course.hashCode();
+        hashCode = hashCode * 37 + this.description.hashCode();
+        hashCode = hashCode * 37 + this.price.hashCode();
+        hashCode = hashCode * 37 + this.status.hashCode();
+        hashCode = hashCode * 37 + this.uid.hashCode();
+
+        return hashCode;
     }
 
 }

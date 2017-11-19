@@ -8,6 +8,7 @@ public class User {
     private String fullName;
     private String age;
     private String profilePicLocation;
+    private String rating;
 
     public User(){
 
@@ -19,6 +20,7 @@ public class User {
         fullName = _fullName;
         age = _age;
         role = "N";
+        rating = "4.6";
     }
 
     public String getUsername() {
@@ -63,5 +65,13 @@ public class User {
 
     public String getProfilePicLocation() {
         return profilePicLocation;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

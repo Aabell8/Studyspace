@@ -13,6 +13,12 @@ import android.widget.TextView;
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.Post;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,6 +44,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     HashMap<Post, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
 
 
+
     private Context mContext;
     private static RecyclerViewClickListener itemListener;
 
@@ -58,7 +65,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private boolean isPositionHeader (int position) {
-        if (posts.get(position).getId() == null)
+        if (posts.get(position).getDescription() == null)
             return true;
         return false;
     }
@@ -80,14 +87,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
-    @SuppressLint("SimpleDateFormat")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostViewHolder){
             final Post q = posts.get(position);
             PostViewHolder qHolder = (PostViewHolder) holder;
 
-            if(itemsPendingRemoval.contains(q)){
+            if(itemsPendingRemoval != null && itemsPendingRemoval.contains(q)){
                 qHolder.regularLayout.setVisibility(View.INVISIBLE);
                 qHolder.swipeLayout.setVisibility(View.VISIBLE);
                 qHolder.undo.setOnClickListener(new View.OnClickListener(){
@@ -104,7 +110,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 qHolder.name.setText(q.getName());
                 qHolder.tag.setText(q.getCourse());
-                qHolder.dateId.setText(q.getId());
+                qHolder.dateId.setText(q.getDescription());
                 qHolder.price.setText(q.getPrice());
                 qHolder.status.setText(q.getStatus());
 
@@ -137,6 +143,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // this will rebind the row in "normal" state
         notifyItemChanged(posts.indexOf(post));
     }
+
 
     @Override
     public int getItemCount() {
@@ -180,10 +187,32 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (posts.contains(removal)) {
                 int position = posts.indexOf(removal);
                 posts.remove(removal);
+                removeFromFirebase(removal); /////
                 itemsPendingRemoval.remove(0);
                 notifyItemRemoved(position);
             }
         }
+    }
+
+    private void removeFromFirebase(final Post rPost){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("posts");
+
+        Query testQ = ref;
+        testQ.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Post nPost = postSnapshot.getValue(Post.class);
+                    if (nPost.equals(rPost)){
+                        postSnapshot.getRef().removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     public boolean isPendingRemoval(int position) {
@@ -238,7 +267,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             text = text.toLowerCase();
             for (Post item: staticPosts) {
                 if(item.getName().toLowerCase().contains(text)
-                        || item.getId().toLowerCase().contains(text)
+                        || item.getDescription().toLowerCase().contains(text)
                         || item.getCourse().toLowerCase().contains(text)){
                     posts.add(item);
                 }
