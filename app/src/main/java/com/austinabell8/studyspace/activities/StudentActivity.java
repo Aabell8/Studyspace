@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.fragments.CreateFragment;
 import com.austinabell8.studyspace.fragments.MessagesFragment;
 import com.austinabell8.studyspace.fragments.PostsFragment;
 import com.austinabell8.studyspace.fragments.ProfileFragment;
@@ -33,14 +32,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 
 public class StudentActivity extends AppCompatActivity
-        implements CreateFragment.OnFragmentInteractionListener,
-        MessagesFragment.OnFragmentInteractionListener,
+        implements MessagesFragment.OnFragmentInteractionListener,
         PostsFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener,
         View.OnClickListener {
 
     private PostsFragment mPostsFragment;
-    private CreateFragment mCreateFragment;
     private MessagesFragment mMessagesFragment;
     private ProfileFragment mProfileFragment;
 

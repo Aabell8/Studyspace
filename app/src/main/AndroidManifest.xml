@@ -14,8 +14,8 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            tools:replace="android:value"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"
+            tools:replace="android:value" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -48,24 +48,27 @@
             android:name=".activities.RegisterActivity"
             android:label="@string/app_name"
             android:theme="@style/LoginTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activities.StudentActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.TutorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.RoleActivity"
-            android:theme="@style/AppTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.PostCreateActivity"
+            android:parentActivityName=".activities.StudentActivity"/>
+        <activity android:name=".activities.SearchActivity"></activity>
     </application>
 
 </manifest>

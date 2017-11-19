@@ -24,4 +24,14 @@
     <string name="choose_your_role">Choose your role</string>
     <string name="tutor">Tutor</string>
     <string name="student">Student</string>
+
+    <string name="subject_prompt">Subject</string>
+
+    <string-array name="subject_arrays">
+        <item>BUSINESS 2257A</item>
+        <item>PHILOSOP 2032F</item>
+        <item>CALC 1501A</item>
+        <item>STATS 2141A</item>
+
+    </string-array>
 </resources>

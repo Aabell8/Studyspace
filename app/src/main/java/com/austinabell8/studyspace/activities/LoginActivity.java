@@ -66,19 +66,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        LoginManager.getInstance().logOut();
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
         FirebaseApp.initializeApp(this);
 
-        LoginManager.getInstance().logOut();
-        mFirebaseAuth = FirebaseAuth.getInstance();
         mRootRef = FirebaseDatabase.getInstance().getReference();
-
         if (isLoggedIn()){
-           completeIntent();
+            completeIntent();
         }
+
 
         setContentView(R.layout.activity_login);
         FBLoginButton = findViewById(R.id.facebook_login_button);

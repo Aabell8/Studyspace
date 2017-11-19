@@ -1,6 +1,7 @@
 package com.austinabell8.studyspace.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.austinabell8.studyspace.R;
+import com.austinabell8.studyspace.activities.PostCreateActivity;
 import com.austinabell8.studyspace.adapters.PostRecyclerAdapter;
 import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
 import com.austinabell8.studyspace.helpers.SwipeUtil;
@@ -262,7 +264,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
     }
 
     public void CreatePost() {
-//        Intent intent = new Intent(this.getActivity(), PostCreateActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this.getActivity(), PostCreateActivity.class);
+        startActivity(intent);
     }
 }
