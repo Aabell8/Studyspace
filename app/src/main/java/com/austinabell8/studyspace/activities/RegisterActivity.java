@@ -46,10 +46,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        String fb = getIntent().getStringExtra("facebook");
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         mPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
         mDatabase = FirebaseDatabase.getInstance();
         mRootRef = FirebaseDatabase.getInstance().getReference();
+
+
 
         mSignupButton = findViewById(R.id.signup_button);
         mSignupButton.setOnClickListener(this);
@@ -60,6 +64,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mAgeText = findViewById(R.id.input_age);
         mPasswordText = findViewById(R.id.input_password);
         mEmailText = findViewById(R.id.input_email);
+
+
     }
 
     @Override

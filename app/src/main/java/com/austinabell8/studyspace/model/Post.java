@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by aabell on 7/12/2017.
@@ -19,6 +20,8 @@ public class Post implements Comparable<Post>, Parcelable {
     private String price;
     private String status;
     private String uid;
+    private String pid;
+    private Map<String, Object> applied;
 
     public Post(){
 
@@ -33,14 +36,14 @@ public class Post implements Comparable<Post>, Parcelable {
         this.uid = uid;
     }
 
-    public static ArrayList<Post> getPosts(){
-        ArrayList<Post> posts = new ArrayList<>();
-        posts.add(new Post("Austin Abell", "STATS 2141A", "1 hour tutor Session", "$40.00", "Active", ""));
-        posts.add(new Post("Austin Abell", "BUSINESS 2257A", "1 hour review", "$30.00", "Active", ""));
-        posts.add(new Post("Austin Abell", "PHILOSOP 2032F", "2 hour tutor Session", "$60.00", "Active", ""));
-        posts.add(new Post("Austin Abell", "CALC 1501A", "1.5 hour exam preparation for upcoming exam on thursday", "$35.00", "Active", ""));
-        return posts;
-    }
+//    public static ArrayList<Post> getPosts(){
+//        ArrayList<Post> posts = new ArrayList<>();
+//        posts.add(new Post("Austin Abell", "STATS 2141A", "1 hour tutor Session", "$40.00", "Active", ""));
+//        posts.add(new Post("Austin Abell", "BUSINESS 2257A", "1 hour review", "$30.00", "Active", ""));
+//        posts.add(new Post("Austin Abell", "PHILOSOP 2032F", "2 hour tutor Session", "$60.00", "Active", ""));
+//        posts.add(new Post("Austin Abell", "CALC 1501A", "1.5 hour exam preparation for upcoming exam on thursday", "$35.00", "Active", ""));
+//        return posts;
+//    }
 
     public String getName() {
         return name;
@@ -90,6 +93,22 @@ public class Post implements Comparable<Post>, Parcelable {
         this.uid = uid;
     }
 
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    public Map<String, Object> getApplied() {
+        return applied;
+    }
+
+    public void setApplied(Map<String, Object> applied) {
+        this.applied = applied;
+    }
+
     @Override
     public int compareTo(@NonNull Post o) {
         if (this.getName().compareTo(o.getName()) < 0)
@@ -112,6 +131,7 @@ public class Post implements Comparable<Post>, Parcelable {
         out.writeString(price);
         out.writeString(status);
         out.writeString(uid);
+        out.writeString(pid);
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -132,6 +152,7 @@ public class Post implements Comparable<Post>, Parcelable {
         price = in.readString();
         status = in.readString();
         uid = in.readString();
+        pid = in.readString();
     }
 
     @Override
@@ -142,18 +163,19 @@ public class Post implements Comparable<Post>, Parcelable {
         Post that = (Post) other;
         // Custom equality check here.
 
-        return this.name.equals(that.name)
-                && this.course.equals(that.course)
-                && this.description.equals(that.description)
-                && this.price.equals(that.price)
-//                && this.status.equals(that.status)
-                && this.uid.equals(that.uid);
+        return this.pid.equals(that.pid);
+//                && this.course.equals(that.course)
+//                && this.description.equals(that.description)
+//                && this.price.equals(that.price)
+////                && this.status.equals(that.status)
+//                && this.uid.equals(that.uid);
     }
 
     @Override
     public int hashCode() {
         int hashCode = 1;
 
+        hashCode = hashCode * 37 + this.pid.hashCode();
         hashCode = hashCode * 37 + this.name.hashCode();
         hashCode = hashCode * 37 + this.course.hashCode();
         hashCode = hashCode * 37 + this.description.hashCode();

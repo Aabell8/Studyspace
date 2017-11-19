@@ -16,10 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.activities.LoginActivity;
-import com.austinabell8.studyspace.activities.RoleActivity;
-import com.austinabell8.studyspace.activities.StudentActivity;
-import com.austinabell8.studyspace.activities.TutorActivity;
 import com.austinabell8.studyspace.helpers.CircleTransform;
 import com.austinabell8.studyspace.model.User;
 import com.bumptech.glide.Glide;
@@ -28,7 +24,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -101,7 +96,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 String tName = user.getFullName();
-                if(user.getAge()!=null){
+                if(!user.getAge().equals("")){
                     tName += ", " + user.getAge();
                 }
                 mNameText.setText(tName);
@@ -190,13 +185,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                                     Glide.with(getContext())
                                             .load(bytes)
                                             .transform(new CircleTransform(getContext()))
-//                                            .asBitmap()
                                             .into(imageView);
                                 }
                             });
                         }
                     });
-//                    updateImage();
                 }
             });
 

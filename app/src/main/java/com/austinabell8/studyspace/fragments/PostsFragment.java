@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -24,22 +23,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.activities.LoginActivity;
+import com.austinabell8.studyspace.activities.PostActivity;
 import com.austinabell8.studyspace.activities.PostCreateActivity;
-import com.austinabell8.studyspace.activities.RoleActivity;
-import com.austinabell8.studyspace.activities.StudentActivity;
-import com.austinabell8.studyspace.activities.TutorActivity;
 import com.austinabell8.studyspace.adapters.PostRecyclerAdapter;
 import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
 import com.austinabell8.studyspace.helpers.SwipeUtil;
 import com.austinabell8.studyspace.model.Post;
-import com.austinabell8.studyspace.model.User;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -89,11 +84,15 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                llm.getOrientation());
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
         mRecyclerView.setLayoutManager(llm);
 
         posts = new ArrayList<>();
 
-        mPostRef.addValueEventListener(new ValueEventListener() {
+        Query tQuery = mPostRef.orderByChild("uid").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        tQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 posts.clear();
@@ -129,11 +128,15 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         mRecyclerViewClickListener = new RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
-
+                final Post clicked = posts.get(position);
+                Intent intent = new Intent(getActivity(), PostActivity.class);
+                intent.putExtra("post_item", clicked);
+                startActivity(intent);
             }
         };
 
-        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
+
+        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener, null);
         mRecyclerView.setAdapter(mPostRecyclerAdapter);
         setSwipeForRecyclerView();
 
@@ -216,7 +219,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
 //            }
 //            @Override
 //            public boolean onQueryTextChange(String newText) {
-//                mpostRecyclerAdapter.filter(newText);
+//                mPostRecyclerAdapter.filter(newText);
 //                return true;
 //            }
 //        });
@@ -231,21 +234,21 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                 return false;
 //            case R.id.action_post_sort_name:
 //                if (!item.isChecked()){
-//                    mpostRecyclerAdapter.sortByName();
+//                    mPostRecyclerAdapter.sortByName();
 //                    item.setChecked(true);
 //                }
 //                scrollToTop();
 //                return true;
 //            case R.id.action_post_sort_ID:
 //                if (!item.isChecked()){
-//                    mpostRecyclerAdapter.sortById();
+//                    mPostRecyclerAdapter.sortById();
 //                    item.setChecked(true);
 //                }
 //                scrollToTop();
 //                return true;
 //            case R.id.action_post_sort_date:
 //                if (!item.isChecked()){
-//                    mpostRecyclerAdapter.sortByDate();
+//                    mPostRecyclerAdapter.sortByDate();
 //                    item.setChecked(true);
 //                }
 //                scrollToTop();
@@ -257,23 +260,23 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void populatePostsList(){
-        // Construct the data source
-        if (posts == null){
-            posts = Post.getPosts();
-        }
-
-        mRecyclerView = inflatedPosts.findViewById(R.id.rvPosts);
-
-        mRecyclerView.setHasFixedSize(true);
-        llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(llm);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                mRecyclerView.getContext(), llm.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
-    }
+//    private void populatePostsList(){
+//        // Construct the data source
+//        if (posts == null){
+//            posts = Post.getPosts();
+//        }
+//
+//        mRecyclerView = inflatedPosts.findViewById(R.id.rvPosts);
+//
+//        mRecyclerView.setHasFixedSize(true);
+//        llm = new LinearLayoutManager(getActivity());
+//        llm.setOrientation(LinearLayoutManager.VERTICAL);
+//        mRecyclerView.setLayoutManager(llm);
+//
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+//                mRecyclerView.getContext(), llm.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
+//    }
 
     public void scrollToTop () {
         mRecyclerView.smoothScrollToPosition(0);
@@ -320,8 +323,8 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                         post.setName(name);
                         post.setStatus("Active");
                         final String uniqueId = UUID.randomUUID().toString();
+                        post.setPid(uniqueId);
                         mPostRef.child(uniqueId).setValue(post);
-
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -343,7 +346,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
             Post nPost = singleSnapshot.getValue(Post.class);
             posts.add(nPost);
-            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
+            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener, null);
             mRecyclerView.setAdapter(mPostRecyclerAdapter);
         }
     }

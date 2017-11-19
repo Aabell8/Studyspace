@@ -1,5 +1,7 @@
 package com.austinabell8.studyspace.model;
 
+import java.util.Map;
+
 public class User {
 
     private String username;
@@ -9,6 +11,7 @@ public class User {
     private String age;
     private String profilePicLocation;
     private String rating;
+    private Map<String, Object> posts;
 
     public User(){
 
@@ -73,5 +76,13 @@ public class User {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public Map<String, Object> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Map<String, Object> posts) {
+        this.posts = posts;
     }
 }

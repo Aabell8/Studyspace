@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +19,8 @@ import android.widget.Toast;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.fragments.MessagesFragment;
-import com.austinabell8.studyspace.fragments.TPostsFragment;
 import com.austinabell8.studyspace.fragments.ProfileFragment;
-import com.austinabell8.studyspace.fragments.SearchFragment;
+import com.austinabell8.studyspace.fragments.TPostsFragment;
 import com.austinabell8.studyspace.helpers.BottomNavigationViewHelper;
 import com.austinabell8.studyspace.helpers.LockableViewPager;
 import com.facebook.login.LoginManager;
@@ -33,16 +31,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 
 public class TutorActivity extends AppCompatActivity
-        implements SearchFragment.OnFragmentInteractionListener,
-        MessagesFragment.OnFragmentInteractionListener,
+        implements MessagesFragment.OnFragmentInteractionListener,
         TPostsFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener,
         View.OnClickListener {
 
     private TPostsFragment mTPostsFragment;
-    private SearchFragment mSearchFragment;
     private MessagesFragment mMessagesFragment;
     private ProfileFragment mProfileFragment;
+
+    private static final int GALLERY_INTENT=2;
 
     private LockableViewPager viewPager;
     private BottomNavigationView navigation;
@@ -53,8 +51,10 @@ public class TutorActivity extends AppCompatActivity
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private StorageReference mStorage;
     private String currentUserId;
     private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mCurrentUserDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,10 @@ public class TutorActivity extends AppCompatActivity
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user == null) {
                     logout();
+                } else {
+                    // User is signed out
                 }
+
             }
         };
 
@@ -83,8 +86,8 @@ public class TutorActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.actionbar_menu, menu);
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.actionbar_menu, menu);
         return true;
     }
 
@@ -148,7 +151,6 @@ public class TutorActivity extends AppCompatActivity
         viewPager = findViewById(R.id.view_pager_bottom_navigation);
         viewPager.setAdapter(mSectionsPagerAdapter);
         viewPager.addOnPageChangeListener(pageChangeListener);
-        viewPager.setSwipeLocked(true);
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -162,18 +164,18 @@ public class TutorActivity extends AppCompatActivity
             switch (item.getItemId()) {
                 case R.id.navigation_posts:
                     viewPager.setCurrentItem(0);
-                    viewPager.setSwipeLocked(false);
+                    viewPager.setSwipeLocked(true);
                     return true;
-                case R.id.navigation_search:
+//                case R.id.navigation_create:
+//                    viewPager.setCurrentItem(1);
+//                    viewPager.setSwipeLocked(false);
+//                    return true;
+                case R.id.navigation_messages:
                     viewPager.setCurrentItem(1);
                     viewPager.setSwipeLocked(false);
                     return true;
-                case R.id.navigation_messages:
-                    viewPager.setCurrentItem(2);
-                    viewPager.setSwipeLocked(false);
-                    return true;
                 case R.id.navigation_profile:
-                    viewPager.setCurrentItem(3);
+                    viewPager.setCurrentItem(2);
                     viewPager.setSwipeLocked(false);
                     return true;
             }
@@ -193,13 +195,13 @@ public class TutorActivity extends AppCompatActivity
                 case 0:
                     navigation.setSelectedItemId(R.id.navigation_posts);
                     break;
+//                case 1:
+//                    navigation.setSelectedItemId(R.id.navigation_create);
+//                    break;
                 case 1:
-                    navigation.setSelectedItemId(R.id.navigation_search);
-                    break;
-                case 2:
                     navigation.setSelectedItemId(R.id.navigation_messages);
                     break;
-                case 3:
+                case 2:
                     navigation.setSelectedItemId(R.id.navigation_profile);
                     break;
             }
@@ -237,6 +239,9 @@ public class TutorActivity extends AppCompatActivity
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         currentUserId = mFirebaseAuth.getCurrentUser().getUid();
+        mCurrentUserDatabaseReference = mFirebaseDatabase
+                .getReference().child("users"
+                        + "/" + currentUserId);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -251,13 +256,13 @@ public class TutorActivity extends AppCompatActivity
                 case 0:
                     fragment = new TPostsFragment();
                     break;
+//                case 1:
+//                    fragment = new CreateFragment();
+//                    break;
                 case 1:
-                    fragment = new SearchFragment();
-                    break;
-                case 2:
                     fragment = new MessagesFragment();
                     break;
-                case 3:
+                case 2:
                     fragment = new ProfileFragment();
             }
             return fragment;
@@ -271,13 +276,13 @@ public class TutorActivity extends AppCompatActivity
                 case 0:
                     mTPostsFragment = (TPostsFragment) createdFragment;
                     break;
+//                case 1:
+//                    mCreateFragment = (CreateFragment) createdFragment;
+//                    break;
                 case 1:
-                    mSearchFragment = (SearchFragment) createdFragment;
-                    break;
-                case 2:
                     mMessagesFragment = (MessagesFragment) createdFragment;
                     break;
-                case 3:
+                case 2:
                     mProfileFragment = (ProfileFragment) createdFragment;
                     break;
             }
@@ -286,8 +291,9 @@ public class TutorActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
+
 
     }
 

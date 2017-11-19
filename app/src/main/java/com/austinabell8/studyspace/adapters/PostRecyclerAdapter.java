@@ -1,6 +1,5 @@
 package com.austinabell8.studyspace.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
+import com.austinabell8.studyspace.helpers.RecyclerViewLongClickListener;
 import com.austinabell8.studyspace.model.Post;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,9 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,11 +45,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private Context mContext;
     private static RecyclerViewClickListener itemListener;
+    private static RecyclerViewLongClickListener itemLongListener;
 
     public PostRecyclerAdapter(Context context, List<Post> posts,
-                               RecyclerViewClickListener itemListener){
+                               RecyclerViewClickListener itemListener, RecyclerViewLongClickListener itemLongListener){
         this.mContext = context;
         this.itemListener = itemListener;
+        this.itemLongListener = itemLongListener;
         this.posts = posts;
         this.staticPosts = new ArrayList<>(posts);
         itemsPendingRemoval = new ArrayList<>();
@@ -115,13 +115,27 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 qHolder.status.setText(q.getStatus());
 
                 final PostViewHolder mViewHolder = qHolder;
-                qHolder.regularLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        itemListener.recyclerViewListClicked(v, mViewHolder.getLayoutPosition());
-                    }
+                if(itemListener != null){
+                    qHolder.regularLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            itemListener.recyclerViewListClicked(v, mViewHolder.getLayoutPosition());
+                        }
 
-                });
+                    });
+                }
+
+                if(itemLongListener != null){
+                    qHolder.regularLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            itemLongListener.recyclerViewListLongClicked(v, mViewHolder.getLayoutPosition());
+                            return true;
+                        }
+
+                    });
+                }
+
 
 
             }

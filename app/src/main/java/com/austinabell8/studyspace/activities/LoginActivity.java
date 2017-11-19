@@ -238,9 +238,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "Austin8handleFacebookSuccess:success");
                             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             progressDialog.hide();
-                            Intent mainIntent = new Intent (LoginActivity.this, StudentActivity.class);
-                            LoginActivity.this.finish();
-                            LoginActivity.this.startActivity(mainIntent);
+                            Intent mainIntent = new Intent (LoginActivity.this, RegisterActivity.class);
+                            mainIntent.putExtra("facebook", "y");
+                            startActivity(mainIntent);
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "Austin8signInWithCredential:failure", task.getException());
@@ -268,6 +269,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String role = dataSnapshot.getValue(String.class);
+                if (role == null){
+                    return;
+                }
                 Intent intent;
                 if (role.equals("N")){
                     intent = new Intent (LoginActivity.this, RoleActivity.class);

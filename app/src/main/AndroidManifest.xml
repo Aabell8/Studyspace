@@ -69,8 +69,12 @@
         <activity
             android:name=".activities.PostCreateActivity"
             android:parentActivityName=".activities.StudentActivity" />
-        <activity android:name=".activities.SearchActivity" />
-        <activity android:name=".activities.PostActivity"></activity>
+        <activity android:name=".activities.SearchActivity"
+            android:parentActivityName=".activities.TutorActivity"/>
+        <activity android:name=".activities.PostActivity"
+            android:parentActivityName=".activities.StudentActivity"/>
+        <activity android:name=".activities.PostSearchActivity"
+            android:parentActivityName=".activities.TutorActivity"/>
     </application>
 
 </manifest>

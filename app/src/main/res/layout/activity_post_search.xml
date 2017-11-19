@@ -18,9 +18,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="40dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:theme="@style/TextLabel">
-        <EditText android:id="@+id/search_hint"
+        android:layout_marginRight="8dp">
+        <EditText android:id="@+id/search_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorPrimary"
@@ -35,32 +34,12 @@
         android:layout_height="wrap_content"
         android:entries="@array/subject_arrays"
         android:prompt="@string/subject_prompt"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="40dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:theme="@style/TextLabel">
-    <EditText
-        android:id="@+id/description_box"
-        android:hint="Description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/course_spinner"
-        android:minLines="3"
-        android:maxLines="8"
-        android:backgroundTint="@color/colorPrimary"
-        />
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/search_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,6 +48,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:textColor="@color/md_white_1000"
         android:padding="20dp"
         android:backgroundTint="@color/colorPrimaryDark"
         />
