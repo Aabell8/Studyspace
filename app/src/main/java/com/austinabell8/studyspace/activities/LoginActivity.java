@@ -75,9 +75,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         FirebaseApp.initializeApp(this);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        if (isLoggedIn()){
-            completeIntent();
-        }
+//        if (isLoggedIn()){
+//            completeIntent();
+//        }
 
 
         setContentView(R.layout.activity_login);
@@ -154,7 +154,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
-
                 if (!mEmail.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()){
 
                     progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
@@ -257,13 +256,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    public boolean isLoggedIn() {
-        return mFirebaseAuth.getCurrentUser() != null;
-//        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-//        return accessToken != null;
-    }
+//    public boolean isLoggedIn() {
+//        return mFirebaseAuth.getCurrentUser() != null;
+////        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+////        return accessToken != null;
+//    }
 
-    private void completeIntent(){
+    private void completeIntent() {
         DatabaseReference ref = mRootRef.child("users").child(mFirebaseAuth.getCurrentUser().getUid()).child("role");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -289,6 +288,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.e("Studyspace", "Database error when retrieving role");
             }
         });
     }

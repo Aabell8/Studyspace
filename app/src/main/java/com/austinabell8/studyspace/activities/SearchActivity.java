@@ -1,8 +1,5 @@
 package com.austinabell8.studyspace.activities;
 
-import android.content.Intent;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,11 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.adapters.PostRecyclerAdapter;
-import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
-import com.austinabell8.studyspace.helpers.RecyclerViewLongClickListener;
+import com.austinabell8.studyspace.adapters.PostSearchRecyclerAdapter;
+import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.Post;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,15 +25,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class SearchActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private ArrayList<Post> posts;
-    private PostRecyclerAdapter mPostRecyclerAdapter;
+    private PostSearchRecyclerAdapter mPostRecyclerAdapter;
     private LinearLayoutManager llm;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerViewLongClickListener mRecyclerViewLongClickListener;
+    private RecyclerViewClickListener mRecyclerViewClickListener;
+    private ProgressBar mSpinner;
 
     private DatabaseReference mRootRef;
     private DatabaseReference mPostRef;
@@ -49,6 +48,7 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.rvPosts);
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mPostRef = mRootRef.child("posts");
+        mSpinner = findViewById(R.id.progressBarSearch);
 
         Bundle data = getIntent().getExtras();
         String course = data.getString("course");
@@ -64,11 +64,35 @@ public class SearchActivity extends AppCompatActivity {
 
         posts = new ArrayList<>();
 
+        mRecyclerViewClickListener = new RecyclerViewClickListener() {
+            @Override
+            public void recyclerViewListClicked(View v, int position) {
+            }
+
+            @Override
+            public void recyclerViewListLongClicked(View v, int position) {
+                final Post clicked = posts.get(position);
+                FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+                String uniqueId = UUID.randomUUID().toString();
+                DatabaseReference mApplicationsDatabaseReference = mFirebaseDatabase
+                        .getReference().child(uniqueId);
+                Map<String,Object> taskMap = new HashMap<>();
+                taskMap.put( "Post", clicked.getPid());
+                taskMap.put("Tutor", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                mApplicationsDatabaseReference.child("applied").updateChildren(taskMap);
+                finish();
+            }
+        };
+
+        mPostRecyclerAdapter = new PostSearchRecyclerAdapter(this, posts, mRecyclerViewClickListener);
+        mRecyclerView.setAdapter(mPostRecyclerAdapter);
+
         Query tQuery = mPostRef.orderByChild("course").equalTo(course);
         tQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 posts.clear();
+                mSpinner.setVisibility(View.GONE);
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     Post nPost = postSnapshot.getValue(Post.class);
@@ -81,55 +105,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout_posts);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mPostRecyclerAdapter!=null){
-                            mPostRecyclerAdapter.removePending();
-                        }
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 100);
 
-            }
-        });
-
-        mRecyclerViewLongClickListener = new RecyclerViewLongClickListener() {
-            @Override
-            public void recyclerViewListLongClicked(View v, int position) {
-                final Post clicked = posts.get(position);
-                FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference mCurrentUserDatabaseReference = mFirebaseDatabase
-                        .getReference().child("users"
-                                + "/" + FirebaseAuth.getInstance().getCurrentUser().getUid());
-                Map<String,Object> taskMap = new HashMap<>();
-                taskMap.put( clicked.getPid(), clicked.getPid());
-                mCurrentUserDatabaseReference.child("applied").updateChildren(taskMap);
-                finish();
-            }
-        };
-
-
-        mPostRecyclerAdapter = new PostRecyclerAdapter(this, posts, null, mRecyclerViewLongClickListener);
-        mRecyclerView.setAdapter(mPostRecyclerAdapter);
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (dy!=0){
-                    mPostRecyclerAdapter.removePending();
-                }
-            }
-        });
 
     }
 }

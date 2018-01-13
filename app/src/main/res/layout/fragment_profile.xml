@@ -1,4 +1,4 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:orientation="horizontal">
 
             <Space
@@ -23,10 +24,22 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
+            <android.support.v7.widget.CardView
+                android:id="@+id/imageCard"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="5dp"
+                android:elevation="12dp"
+                android:innerRadius="0dp"
+                android:shape="ring"
+                android:thicknessRatio="1.9"
+                app:cardCornerRadius="75dp">
             <ImageView
                 android:id="@+id/profilePicture"
                 android:layout_width="150dp"
-                android:layout_height="150dp" />
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"/>
+            </android.support.v7.widget.CardView>
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -49,41 +62,146 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/name_text"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textSize="20sp" />
-        <TextView
-            android:id="@+id/username_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textSize="18sp" />
+            android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--NAME-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_margin"
+                    android:padding="@dimen/activity_margin">
+
+                    <ImageView
+                        android:id="@+id/ivListItem1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/activity_margin"
+                        android:layout_marginRight="@dimen/activity_margin"
+                        android:tint="@color/colorPrimary"
+                        app:srcCompat="@drawable/ic_person_black_24dp"
+                        tools:ignore="RtlHardcoded" />
+
+                    <TextView
+                        android:id="@+id/name_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/activity_margin"
+                        android:layout_toEndOf="@id/ivListItem1"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <TextView
+                        android:id="@+id/txtProductType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/name_text"
+                        android:layout_marginStart="@dimen/activity_margin"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/ivListItem1"
+                        android:text="@string/name"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+
+                </RelativeLayout>
+
+                <!--USERNAME-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/activity_margin">
+
+
+                    <ImageView
+                        android:id="@+id/ivListItem2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/activity_margin"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/ic_person_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/username_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/activity_margin"
+                        android:layout_toEndOf="@id/ivListItem2"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/username_text"
+                        android:layout_marginStart="@dimen/activity_margin"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/ivListItem2"
+                        android:text="@string/username"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+
+                </RelativeLayout>
+
+                <!--EMAIL-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/activity_margin">
+
+
+                    <ImageView
+                        android:id="@+id/ivListItem3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/activity_margin"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/ic_person_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/email_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/activity_margin"
+                        android:layout_toEndOf="@id/ivListItem3"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/email_text"
+                        android:layout_marginStart="@dimen/activity_margin"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/ivListItem3"
+                        android:text="@string/email"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/log_out_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginStart="50dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/md_white_1000"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:text="@string/log_out" />
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/log_out_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginStart="50dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"
-        android:text="@string/log_out"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-</android.support.constraint.ConstraintLayout>
+</ScrollView>

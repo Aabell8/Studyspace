@@ -1,9 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
-        android:width="40dp"
-        android:height="40dp"
+        android:drawable="@color/colorPrimary"/>
+
+    <item
         android:gravity="center"
-        android:viewportHeight="108"
-        android:viewportWidth="108"
+        android:width="60dp"
+        android:height="60dp"
         android:drawable="@drawable/book"/>
+
 </layer-list>

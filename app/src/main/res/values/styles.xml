@@ -17,6 +17,9 @@
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
@@ -32,6 +35,10 @@
         <item name="colorAccent">@color/md_white_1000</item>
         <item name="android:textColorPrimary">@color/md_grey_300</item>
         <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="BorderlessButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/lightGrey</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

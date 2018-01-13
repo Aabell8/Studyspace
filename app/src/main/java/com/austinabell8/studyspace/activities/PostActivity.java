@@ -5,25 +5,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.adapters.ApplicantRecyclerAdapter;
 import com.austinabell8.studyspace.fragments.PostsFragment;
-import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
+import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.Post;
 import com.austinabell8.studyspace.model.User;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -45,7 +41,11 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
         Bundle data = getIntent().getExtras();
-        Post post = data.getParcelable("post_item");
+        String postId = null;
+//        Post post = data.getParcelable("post_item");
+        if (data != null){
+            postId = data.getString("post_item");
+        }
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mUsersRef = mRootRef.child("users");
@@ -60,8 +60,27 @@ public class PostActivity extends AppCompatActivity {
 
         users = new ArrayList<>();
 
-        String pID = post.getPid();
-        DatabaseReference tRef = mRootRef.child("posts").child(pID).child("applicants");
+        if (postId != null){
+            DatabaseReference tRef = mRootRef.child("posts").child(postId).child("applicants");
+            tRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                }
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
 //        ref.addListenerForSingleValueEvent(
 //                new ValueEventListener() {
 //                    @Override

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
+import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.User;
 import java.util.List;
 

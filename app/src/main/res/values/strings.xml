@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Studyspace</string>
+    <string name="app_name">PassMyClass</string>
     <string name="facebook_app_id">326384861170355</string>
     <string name="fb_login_protocol_scheme">fb875333829286542</string>
 
@@ -26,6 +26,9 @@
     <string name="student">Student</string>
 
     <string name="subject_prompt">Subject</string>
+    <string name="username">Username</string>
+    <string name="name">Name</string>
+    <string name="apply">Apply</string>
 
     <string-array name="subject_arrays">
         <item>BUSINESS 2257A</item>

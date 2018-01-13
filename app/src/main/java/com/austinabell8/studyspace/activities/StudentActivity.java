@@ -22,8 +22,8 @@ import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.fragments.MessagesFragment;
 import com.austinabell8.studyspace.fragments.PostsFragment;
 import com.austinabell8.studyspace.fragments.ProfileFragment;
-import com.austinabell8.studyspace.helpers.BottomNavigationViewHelper;
-import com.austinabell8.studyspace.helpers.LockableViewPager;
+import com.austinabell8.studyspace.utils.BottomNavigationViewHelper;
+import com.austinabell8.studyspace.utils.LockableViewPager;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,8 +41,6 @@ public class StudentActivity extends AppCompatActivity
     private MessagesFragment mMessagesFragment;
     private ProfileFragment mProfileFragment;
 
-    private static final int GALLERY_INTENT=2;
-
     private LockableViewPager viewPager;
     private BottomNavigationView navigation;
 
@@ -52,10 +50,6 @@ public class StudentActivity extends AppCompatActivity
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private StorageReference mStorage;
-    private String currentUserId;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mCurrentUserDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +58,6 @@ public class StudentActivity extends AppCompatActivity
         setContentView(R.layout.activity_student);
 
         initView();
-        initializeData();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -236,15 +229,6 @@ public class StudentActivity extends AppCompatActivity
         }
     }
 
-    private void initializeData(){
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        currentUserId = mFirebaseAuth.getCurrentUser().getUid();
-        mCurrentUserDatabaseReference = mFirebaseDatabase
-                .getReference().child("users"
-                        + "/" + currentUserId);
-    }
-
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -257,9 +241,6 @@ public class StudentActivity extends AppCompatActivity
                 case 0:
                     fragment = new PostsFragment();
                     break;
-//                case 1:
-//                    fragment = new CreateFragment();
-//                    break;
                 case 1:
                     fragment = new MessagesFragment();
                     break;
@@ -277,9 +258,6 @@ public class StudentActivity extends AppCompatActivity
                 case 0:
                     mPostsFragment = (PostsFragment) createdFragment;
                     break;
-//                case 1:
-//                    mCreateFragment = (CreateFragment) createdFragment;
-//                    break;
                 case 1:
                     mMessagesFragment = (MessagesFragment) createdFragment;
                     break;

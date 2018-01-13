@@ -2,6 +2,8 @@ package com.austinabell8.studyspace.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.helpers.CircleTransform;
 import com.austinabell8.studyspace.model.User;
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
@@ -33,6 +34,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 
@@ -47,6 +52,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private ImageButton mPhotoPickerButton;
     private TextView mNameText;
     private TextView mUsernameText;
+    private TextView mEmailText;
     private ImageView mImageView;
 
     private FirebaseAuth mFirebaseAuth;
@@ -58,6 +64,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private DatabaseReference mCurrentUserDatabaseReference;
 
     private static final int GALLERY_INTENT=2;
+    private static final int THUMBNAIL_SIZE = 1024;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -83,11 +90,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         mLogoutButton.setOnClickListener(this);
         mNameText = inflatedProfile.findViewById(R.id.name_text);
         mUsernameText = inflatedProfile.findViewById(R.id.username_text);
+        mEmailText = inflatedProfile.findViewById(R.id.email_text);
 
         mImageView = inflatedProfile.findViewById(R.id.profilePicture);
         Glide.with(getContext())
                 .load(R.drawable.com_facebook_profile_picture_blank_portrait)
-                .transform(new CircleTransform(getContext()))
                 .into(mImageView);
 
 
@@ -102,6 +109,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 mNameText.setText(tName);
 
                 mUsernameText.setText(user.getUsername());
+
+                mEmailText.setText(user.getEmail());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -141,7 +150,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     public void openImageSelector(){
 
-        mPhotoPickerButton = (ImageButton) inflatedProfile.findViewById(R.id.imageButton);
+        mPhotoPickerButton = inflatedProfile.findViewById(R.id.imageButton);
         mPhotoPickerButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -163,13 +172,24 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
 
             Uri uri = data.getData();
+            Bitmap bitmap = null;
+            try {
+                bitmap = getThumbnail(uri, this);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imageData = baos.toByteArray();
             //Keep all images for a specific chat grouped together
             final String imageLocation = "Photos/profile_picture/" + currentUserId;
             final String uniqueId = UUID.randomUUID().toString();
             final StorageReference filepath = mStorage.child(imageLocation).child(uniqueId + "/profile_pic");
             final String downloadURl = filepath.getPath();
 
-            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            filepath.putBytes(imageData).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     //create a new message containing this image
@@ -184,7 +204,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                                 public void onSuccess(byte[] bytes) {
                                     Glide.with(getContext())
                                             .load(bytes)
-                                            .transform(new CircleTransform(getContext()))
+//                                            .transform(new CircleTransform(getContext()))
                                             .into(imageView);
                                 }
                             });
@@ -198,6 +218,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
 
     }
+
+
 
     private void initializeUserInfo(){
         final ImageView imageView = inflatedProfile.findViewById(R.id.profilePicture);
@@ -222,7 +244,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             public void onSuccess(byte[] bytes) {
                                 Glide.with(getContext())
                                         .load(bytes)
-                                        .transform(new CircleTransform(getContext()))
+//                                        .transform(new CircleTransform(getContext()))
 //                                            .asBitmap()
                                         .into(imageView);
                             }
@@ -250,10 +272,65 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
-
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    public static Bitmap decodeUri(Context c, Uri uri, final int requiredSize)
+            throws FileNotFoundException {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o);
+
+        int width_tmp = o.outWidth
+                , height_tmp = o.outHeight;
+        int scale = 1;
+
+        while(true) {
+            if(width_tmp / 2 < requiredSize || height_tmp / 2 < requiredSize)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o2);
+    }
+
+    public static Bitmap getThumbnail(Uri uri, ProfileFragment fragment) throws FileNotFoundException, IOException {
+        InputStream input = fragment.getContext().getContentResolver().openInputStream(uri);
+
+        BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
+        onlyBoundsOptions.inJustDecodeBounds = true;
+        onlyBoundsOptions.inDither=true;//optional
+        onlyBoundsOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
+        BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
+        input.close();
+
+        if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1)) {
+            return null;
+        }
+
+        int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight : onlyBoundsOptions.outWidth;
+
+        double ratio = (originalSize > THUMBNAIL_SIZE) ? (originalSize / THUMBNAIL_SIZE) : 1.0;
+
+        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+        bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
+        bitmapOptions.inDither = true; //optional
+        bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//
+        input = fragment.getContext().getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+        input.close();
+        return bitmap;
+    }
+
+    private static int getPowerOfTwoForSampleRatio(double ratio){
+        int k = Integer.highestOneBit((int)Math.floor(ratio));
+        if(k==0) return 1;
+        else return k;
     }
 
 

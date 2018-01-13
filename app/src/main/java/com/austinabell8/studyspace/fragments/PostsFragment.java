@@ -26,8 +26,8 @@ import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.activities.PostActivity;
 import com.austinabell8.studyspace.activities.PostCreateActivity;
 import com.austinabell8.studyspace.adapters.PostRecyclerAdapter;
-import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
-import com.austinabell8.studyspace.helpers.SwipeUtil;
+import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
+import com.austinabell8.studyspace.utils.SwipeUtil;
 import com.austinabell8.studyspace.model.Post;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -43,9 +43,6 @@ import java.util.UUID;
 
 public class PostsFragment extends Fragment implements View.OnClickListener {
 
-//    private static final int TYPE_NAME = 0;
-//    private static final int TYPE_DATE = 1;
-
     private OnFragmentInteractionListener mListener;
     private View inflatedPosts;
     private RecyclerView mRecyclerView;
@@ -59,7 +56,6 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
 
     private DatabaseReference mRootRef;
     private DatabaseReference mPostRef;
-//    private Menu optionsMenu;
 
     public PostsFragment() {
         // Required empty public constructor
@@ -132,6 +128,10 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(getActivity(), PostActivity.class);
                 intent.putExtra("post_item", clicked);
                 startActivity(intent);
+            }
+
+            @Override
+            public void recyclerViewListLongClicked(View v, int position) {
             }
         };
 
@@ -226,38 +226,17 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
 //        optionsMenu = menu;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_logout:
-                return false;
-//            case R.id.action_post_sort_name:
-//                if (!item.isChecked()){
-//                    mPostRecyclerAdapter.sortByName();
-//                    item.setChecked(true);
-//                }
-//                scrollToTop();
-//                return true;
-//            case R.id.action_post_sort_ID:
-//                if (!item.isChecked()){
-//                    mPostRecyclerAdapter.sortById();
-//                    item.setChecked(true);
-//                }
-//                scrollToTop();
-//                return true;
-//            case R.id.action_post_sort_date:
-//                if (!item.isChecked()){
-//                    mPostRecyclerAdapter.sortByDate();
-//                    item.setChecked(true);
-//                }
-//                scrollToTop();
-//                return true;
-            default:
-                break;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle item selection
+//        switch (item.getItemId()) {
+//            case R.id.action_logout:
+//                return false;
+//            default:
+//                break;
+//        }
+//        return false;
+//    }
 
 
 //    private void populatePostsList(){

@@ -21,8 +21,8 @@ import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.fragments.MessagesFragment;
 import com.austinabell8.studyspace.fragments.ProfileFragment;
 import com.austinabell8.studyspace.fragments.TPostsFragment;
-import com.austinabell8.studyspace.helpers.BottomNavigationViewHelper;
-import com.austinabell8.studyspace.helpers.LockableViewPager;
+import com.austinabell8.studyspace.utils.BottomNavigationViewHelper;
+import com.austinabell8.studyspace.utils.LockableViewPager;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -82,13 +82,6 @@ public class TutorActivity extends AppCompatActivity
         //default discover tab on open
         View view = navigation.findViewById(R.id.navigation_posts);
         view.performClick();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.actionbar_menu, menu);
-        return true;
     }
 
     @Override
@@ -166,10 +159,6 @@ public class TutorActivity extends AppCompatActivity
                     viewPager.setCurrentItem(0);
                     viewPager.setSwipeLocked(true);
                     return true;
-//                case R.id.navigation_create:
-//                    viewPager.setCurrentItem(1);
-//                    viewPager.setSwipeLocked(false);
-//                    return true;
                 case R.id.navigation_messages:
                     viewPager.setCurrentItem(1);
                     viewPager.setSwipeLocked(false);
@@ -195,9 +184,6 @@ public class TutorActivity extends AppCompatActivity
                 case 0:
                     navigation.setSelectedItemId(R.id.navigation_posts);
                     break;
-//                case 1:
-//                    navigation.setSelectedItemId(R.id.navigation_create);
-//                    break;
                 case 1:
                     navigation.setSelectedItemId(R.id.navigation_messages);
                     break;
@@ -256,9 +242,6 @@ public class TutorActivity extends AppCompatActivity
                 case 0:
                     fragment = new TPostsFragment();
                     break;
-//                case 1:
-//                    fragment = new CreateFragment();
-//                    break;
                 case 1:
                     fragment = new MessagesFragment();
                     break;
@@ -276,9 +259,6 @@ public class TutorActivity extends AppCompatActivity
                 case 0:
                     mTPostsFragment = (TPostsFragment) createdFragment;
                     break;
-//                case 1:
-//                    mCreateFragment = (CreateFragment) createdFragment;
-//                    break;
                 case 1:
                     mMessagesFragment = (MessagesFragment) createdFragment;
                     break;

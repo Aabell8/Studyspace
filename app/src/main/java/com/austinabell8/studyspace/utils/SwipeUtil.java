@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace.helpers;
+package com.austinabell8.studyspace.utils;
 
 /**
  * Created by aabell on 7/27/2017.

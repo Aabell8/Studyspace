@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace.helpers;
+package com.austinabell8.studyspace.utils;
 
 import android.view.View;
 
@@ -8,4 +8,5 @@ import android.view.View;
 
 public interface RecyclerViewClickListener {
     void recyclerViewListClicked(View v, int position);
+    void recyclerViewListLongClicked(View v, int position);
 }

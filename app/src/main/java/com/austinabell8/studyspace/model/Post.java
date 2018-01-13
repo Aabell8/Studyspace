@@ -36,15 +36,6 @@ public class Post implements Comparable<Post>, Parcelable {
         this.uid = uid;
     }
 
-//    public static ArrayList<Post> getPosts(){
-//        ArrayList<Post> posts = new ArrayList<>();
-//        posts.add(new Post("Austin Abell", "STATS 2141A", "1 hour tutor Session", "$40.00", "Active", ""));
-//        posts.add(new Post("Austin Abell", "BUSINESS 2257A", "1 hour review", "$30.00", "Active", ""));
-//        posts.add(new Post("Austin Abell", "PHILOSOP 2032F", "2 hour tutor Session", "$60.00", "Active", ""));
-//        posts.add(new Post("Austin Abell", "CALC 1501A", "1.5 hour exam preparation for upcoming exam on thursday", "$35.00", "Active", ""));
-//        return posts;
-//    }
-
     public String getName() {
         return name;
     }

@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace.helpers;
+package com.austinabell8.studyspace.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.helpers.RecyclerViewClickListener;
-import com.austinabell8.studyspace.helpers.RecyclerViewLongClickListener;
+import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
+import com.austinabell8.studyspace.utils.RecyclerViewLongClickListener;
 import com.austinabell8.studyspace.model.Post;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,7 +31,6 @@ import java.util.List;
 public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Post> posts;
-    private List<Post> staticPosts;
     private List<Post> itemsPendingRemoval;
 
     private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3 seconds
@@ -53,7 +52,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.itemListener = itemListener;
         this.itemLongListener = itemLongListener;
         this.posts = posts;
-        this.staticPosts = new ArrayList<>(posts);
         itemsPendingRemoval = new ArrayList<>();
     }
 
@@ -190,7 +188,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         if (posts.contains(data)) {
             posts.remove(position);
-             staticPosts.remove(position);
+
             notifyItemRemoved(position);
         }
     }
@@ -249,15 +247,15 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public PostViewHolder(View view) {
             super(view);
-            regularLayout = (LinearLayout) view.findViewById(R.id.item_post);
-            name = (TextView) view.findViewById(R.id.post_name);
-            tag = (TextView) view.findViewById(R.id.post_tag);
-            dateId = (TextView) view.findViewById(R.id.post_date_id);
-            price = (TextView) view.findViewById(R.id.post_price);
-            status = (TextView) view.findViewById(R.id.post_status);
+            regularLayout = view.findViewById(R.id.item_post);
+            name = view.findViewById(R.id.post_name);
+            tag = view.findViewById(R.id.post_tag);
+            dateId = view.findViewById(R.id.post_date_id);
+            price = view.findViewById(R.id.post_price);
+            status = view.findViewById(R.id.post_status);
 
-            swipeLayout = (LinearLayout) view.findViewById(R.id.item_post_remove);
-            undo = (TextView) view.findViewById(R.id.undo);
+            swipeLayout = view.findViewById(R.id.item_post_remove);
+            undo = view.findViewById(R.id.undo);
         }
 
     }
@@ -273,77 +271,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
-    public void filter(String text) {
-        posts.clear();
-        if(text.isEmpty()){
-            posts.addAll(staticPosts);
-        } else{
-            text = text.toLowerCase();
-            for (Post item: staticPosts) {
-                if(item.getName().toLowerCase().contains(text)
-                        || item.getDescription().toLowerCase().contains(text)
-                        || item.getCourse().toLowerCase().contains(text)){
-                    posts.add(item);
-                }
-            }
-        }
-        notifyDataSetChanged();
-    }
-
-    public void sortByName () {
-//        Collections.sort(posts, new Comparator<post>() {
-//            @Override
-//            public int compare(post c1, post c2) {
-//                // ascending order
-//                int result = c1.getName().compareTo(c2.getName());
-//                if (result == 0){
-//                    return c2.getDate().compareTo(c1.getDate());
-//                }
-//                else {
-//                    return result;
-//                }
-//
-//            }
-//        });
-//        staticPosts = new ArrayList<>(posts);
-//        notifyDataSetChanged();
-    }
-
-    public void sortById () {
-//        Collections.sort(posts, new Comparator<post>() {
-//            @Override
-//            public int compare(post c1, post c2) {
-//                // ascending order
-//                int result =  c1.getCourse().compareTo(c2.getCourse());
-//                if (result == 0){
-//                    return c2.getDate().compareTo(c1.getDate());
-//                }
-//                else {
-//                    return result;
-//                }
-//            }
-//        });
-//        staticPosts = new ArrayList<>(posts);
-//        notifyDataSetChanged();
-    }
-
-    public void sortByDate () {
-//        Collections.sort(posts, new Comparator<post>() {
-//            @Override
-//            public int compare(post c1, post c2) {
-//                // ascending order
-//                int result =  c2.getDate().compareTo(c1.getDate());
-//                if (result == 0){
-//                    return c1.getName().compareTo(c2.getName());
-//                }
-//                else {
-//                    return result;
-//                }
-//            }
-//        });
-//        staticPosts = new ArrayList<>(posts);
-//        notifyDataSetChanged();
-    }
 
 }
 
