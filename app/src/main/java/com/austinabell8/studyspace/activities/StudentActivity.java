@@ -27,9 +27,6 @@ import com.austinabell8.studyspace.utils.LockableViewPager;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StorageReference;
 
 public class StudentActivity extends AppCompatActivity
         implements MessagesFragment.OnFragmentInteractionListener,
@@ -250,6 +247,7 @@ public class StudentActivity extends AppCompatActivity
             return fragment;
         }
 
+        @NonNull
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment createdFragment = (Fragment) super.instantiateItem(container, position);

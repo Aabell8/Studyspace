@@ -272,17 +272,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     return;
                 }
                 Intent intent;
-                if (role.equals("N")){
-                    intent = new Intent (LoginActivity.this, RoleActivity.class);
-                    startActivity(intent);
-                }
-                else if (role.equals("S")){
-                    intent = new Intent (LoginActivity.this, StudentActivity.class);
-                    startActivity(intent);
-                }
-                else if (role.equals("T")){
-                    intent = new Intent (LoginActivity.this, TutorActivity.class);
-                    startActivity(intent);
+                switch (role) {
+                    case "N":
+                        intent = new Intent(LoginActivity.this, RoleActivity.class);
+                        startActivity(intent);
+                        break;
+                    case "S":
+                        intent = new Intent(LoginActivity.this, StudentActivity.class);
+                        startActivity(intent);
+                        break;
+                    case "T":
+                        intent = new Intent(LoginActivity.this, TutorActivity.class);
+                        startActivity(intent);
+                        break;
                 }
                 finish();
             }

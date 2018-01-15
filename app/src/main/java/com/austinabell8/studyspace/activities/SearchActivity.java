@@ -14,6 +14,7 @@ import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.adapters.PostSearchRecyclerAdapter;
 import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.Post;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -75,16 +76,18 @@ public class SearchActivity extends AppCompatActivity {
                 FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
                 String uniqueId = UUID.randomUUID().toString();
                 DatabaseReference mApplicationsDatabaseReference = mFirebaseDatabase
-                        .getReference().child(uniqueId);
+                        .getReference().child("applications");
                 Map<String,Object> taskMap = new HashMap<>();
-                taskMap.put( "Post", clicked.getPid());
+                taskMap.put("Post", clicked.getPid());
                 taskMap.put("Tutor", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                mApplicationsDatabaseReference.child("applied").updateChildren(taskMap);
+                mApplicationsDatabaseReference.child(uniqueId).updateChildren(taskMap);
+
+                Glide.with(mRecyclerView.getContext()).pauseRequests();
                 finish();
             }
         };
 
-        mPostRecyclerAdapter = new PostSearchRecyclerAdapter(this, posts, mRecyclerViewClickListener);
+        mPostRecyclerAdapter = new PostSearchRecyclerAdapter(mRecyclerView.getContext(), posts, mRecyclerViewClickListener);
         mRecyclerView.setAdapter(mPostRecyclerAdapter);
 
         Query tQuery = mPostRef.orderByChild("course").equalTo(course);
@@ -102,6 +105,7 @@ public class SearchActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.e("Cancelled", "Post query request cancelled.");
             }
         });
 
