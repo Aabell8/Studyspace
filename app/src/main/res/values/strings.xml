@@ -16,7 +16,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="posts">posts</string>
     <string name="new_post">new</string>
-    <string name="messages">Messages</string>
+    <string name="messages">No New Messages</string>
     <string name="profile">Profile</string>
     <string name="create">create</string>
     <string name="create_account">No account yet? Create one</string>
@@ -29,6 +29,7 @@
     <string name="username">Username</string>
     <string name="name">Name</string>
     <string name="apply">Apply</string>
+    <string name="applied">Applied</string>
 
     <string-array name="subject_arrays">
         <item>BUSINESS 2257A</item>

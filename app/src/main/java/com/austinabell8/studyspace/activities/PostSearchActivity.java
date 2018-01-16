@@ -42,9 +42,21 @@ public class PostSearchActivity extends AppCompatActivity {
                 Intent intent = new Intent(PostSearchActivity.this, SearchActivity.class);
                 intent.putExtra("course", mCourseSpinner.getItemAtPosition(mCourseSpinner.getSelectedItemPosition()).toString());
                 intent.putExtra("search_text", mSearchText.getText().toString());
-                startActivity(intent);
-                finish();
+                startActivityForResult(intent, 1);
             }
         });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                Bundle b = data.getExtras();
+                final String pId = b.getString("Pid");
+                Intent intent = new Intent();
+                intent.putExtra("Pid", pId);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        }
     }
 }

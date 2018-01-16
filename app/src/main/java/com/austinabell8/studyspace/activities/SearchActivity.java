@@ -1,5 +1,7 @@
 package com.austinabell8.studyspace.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.adapters.PostSearchRecyclerAdapter;
 import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.Post;
+import com.austinabell8.studyspace.utils.SearchPostClickListener;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +38,7 @@ public class SearchActivity extends AppCompatActivity {
     private PostSearchRecyclerAdapter mPostRecyclerAdapter;
     private LinearLayoutManager llm;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerViewClickListener mRecyclerViewClickListener;
+    private SearchPostClickListener mRecyclerViewClickListener;
     private ProgressBar mSpinner;
 
     private DatabaseReference mRootRef;
@@ -65,29 +68,31 @@ public class SearchActivity extends AppCompatActivity {
 
         posts = new ArrayList<>();
 
-        mRecyclerViewClickListener = new RecyclerViewClickListener() {
+        mRecyclerViewClickListener = new SearchPostClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
             }
 
             @Override
-            public void recyclerViewListLongClicked(View v, int position) {
+            public void applyButtonClicked(View v, int position) {
                 final Post clicked = posts.get(position);
-                FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-                String uniqueId = UUID.randomUUID().toString();
-                DatabaseReference mApplicationsDatabaseReference = mFirebaseDatabase
-                        .getReference().child("applications");
+                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference ref = firebaseDatabase
+                        .getReference().child("tutor_applications");
                 Map<String,Object> taskMap = new HashMap<>();
-                taskMap.put("Post", clicked.getPid());
-                taskMap.put("Tutor", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                mApplicationsDatabaseReference.child(uniqueId).updateChildren(taskMap);
-
-                Glide.with(mRecyclerView.getContext()).pauseRequests();
-                finish();
+                taskMap.put(clicked.getPid(), true);
+                ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .updateChildren(taskMap);
+                ref.getParent().child("post_applicants");
+//                Glide.with(mRecyclerView.getContext()).pauseRequests();
+//                Intent intent = new Intent();
+//                intent.putExtra("Pid", clicked.getPid());
+                setResult(Activity.RESULT_OK);
+//                finish();
             }
         };
 
-        mPostRecyclerAdapter = new PostSearchRecyclerAdapter(mRecyclerView.getContext(), posts, mRecyclerViewClickListener);
+        mPostRecyclerAdapter = new PostSearchRecyclerAdapter(getApplicationContext(), posts, mRecyclerViewClickListener);
         mRecyclerView.setAdapter(mPostRecyclerAdapter);
 
         Query tQuery = mPostRef.orderByChild("course").equalTo(course);
@@ -108,8 +113,5 @@ public class SearchActivity extends AppCompatActivity {
                 Log.e("Cancelled", "Post query request cancelled.");
             }
         });
-
-
-
     }
 }

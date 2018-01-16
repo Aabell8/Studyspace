@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.Post;
+import com.austinabell8.studyspace.utils.SearchPostClickListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -37,11 +38,11 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     private List<Post> posts;
 
     private Context mContext;
-    private static RecyclerViewClickListener itemListener;
+    private static SearchPostClickListener itemListener;
 //    private static RecyclerViewLongClickListener itemLongListener;
 
     public PostSearchRecyclerAdapter(Context context, List<Post> posts,
-                                     RecyclerViewClickListener itemListener) {
+                                     SearchPostClickListener itemListener) {
         this.mContext = context;
         this.itemListener = itemListener;
 //        this.itemLongListener = itemLongListener;
@@ -114,12 +115,12 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
             });
 
-            pHolder.regularLayout.setOnLongClickListener(new View.OnLongClickListener(){
-
+            pHolder.applyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
-                    itemListener.recyclerViewListLongClicked(view, mViewHolder.getLayoutPosition());
-                    return true;
+                public void onClick(View view) {
+                    itemListener.applyButtonClicked(view, mViewHolder.getLayoutPosition());
+                    mViewHolder.applyButton.setText(R.string.applied);
+                    mViewHolder.applyButton.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
                 }
             });
         }

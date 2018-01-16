@@ -136,7 +136,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         };
 
 
-        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener, null);
+        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
         mRecyclerView.setAdapter(mPostRecyclerAdapter);
         setSwipeForRecyclerView();
 
@@ -325,7 +325,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
             Post nPost = singleSnapshot.getValue(Post.class);
             posts.add(nPost);
-            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener, null);
+            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
             mRecyclerView.setAdapter(mPostRecyclerAdapter);
         }
     }

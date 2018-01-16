@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
-import com.austinabell8.studyspace.utils.RecyclerViewLongClickListener;
 import com.austinabell8.studyspace.model.Post;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,45 +43,20 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private Context mContext;
     private static RecyclerViewClickListener itemListener;
-    private static RecyclerViewLongClickListener itemLongListener;
 
     public PostRecyclerAdapter(Context context, List<Post> posts,
-                               RecyclerViewClickListener itemListener, RecyclerViewLongClickListener itemLongListener){
+                               RecyclerViewClickListener itemListener){
         this.mContext = context;
         this.itemListener = itemListener;
-        this.itemLongListener = itemLongListener;
         this.posts = posts;
         itemsPendingRemoval = new ArrayList<>();
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (isPositionHeader(position))
-            return TYPE_HEADER;
-        return TYPE_ITEM;
-    }
-
-    private boolean isPositionHeader (int position) {
-        if (posts.get(position).getDescription() == null)
-            return true;
-        return false;
-    }
-
-    @Override
     public RecyclerView.ViewHolder onCreateViewHolder (ViewGroup parent, int viewType){
-        if (viewType == TYPE_ITEM) {
             View mView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_post_compound, parent, false);
             return new PostViewHolder(mView);
-        }
-//        else if (viewType == TYPE_HEADER){
-//            View mView = LayoutInflater.from(parent.getContext())
-//                    .inflate(R.layout.item_divider, parent, false);
-//            return new DividerViewHolder(mView);
-//        }
-
-        throw new RuntimeException("There is no type that matches the type "+ viewType);
-
     }
 
     @Override
@@ -102,7 +76,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 });
 
             }
-            else {
+            else if (q!=null) {
                 qHolder.regularLayout.setVisibility(View.VISIBLE);
                 qHolder.swipeLayout.setVisibility(View.INVISIBLE);
 
@@ -121,20 +95,16 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
 
                     });
-                }
 
-                if(itemLongListener != null){
                     qHolder.regularLayout.setOnLongClickListener(new View.OnLongClickListener() {
+
                         @Override
-                        public boolean onLongClick(View v) {
-                            itemLongListener.recyclerViewListLongClicked(v, mViewHolder.getLayoutPosition());
+                        public boolean onLongClick(View view) {
+                            itemListener.recyclerViewListLongClicked(view, mViewHolder.getLayoutPosition());
                             return true;
                         }
-
                     });
                 }
-
-
 
             }
         }
