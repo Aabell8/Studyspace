@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,12 +19,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.activities.PostActivity;
 import com.austinabell8.studyspace.activities.PostCreateActivity;
 import com.austinabell8.studyspace.adapters.PostRecyclerAdapter;
 import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
@@ -51,6 +50,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
     private LinearLayoutManager llm;
     private FloatingActionButton mFab;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private Snackbar mSnackbar;
 
     private RecyclerViewClickListener mRecyclerViewClickListener;
 
@@ -87,22 +87,11 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
 
         posts = new ArrayList<>();
 
-        Query tQuery = mPostRef.orderByChild("uid").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        tQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                posts.clear();
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    Post nPost = postSnapshot.getValue(Post.class);
-                    posts.add(nPost);
-                    (mRecyclerView.getAdapter()).notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
+        mRecyclerView.setAdapter(mPostRecyclerAdapter);
+        setSwipeForRecyclerView();
+
+        refreshPosts();
 
         mSwipeRefreshLayout = inflatedPosts.findViewById(R.id.swipe_refresh_layout_posts);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -112,45 +101,13 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void run() {
                         if (mPostRecyclerAdapter!=null){
-                            mPostRecyclerAdapter.removePending();
+                            refreshPosts();
+                            mPostRecyclerAdapter.clearRemoved();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }, 100);
 
-            }
-        });
-
-        mRecyclerViewClickListener = new RecyclerViewClickListener() {
-            @Override
-            public void recyclerViewListClicked(View v, int position) {
-                final Post clicked = posts.get(position);
-                Intent intent = new Intent(getActivity(), PostActivity.class);
-                intent.putExtra("post_item", clicked);
-                startActivity(intent);
-            }
-
-            @Override
-            public void recyclerViewListLongClicked(View v, int position) {
-            }
-        };
-
-
-        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
-        mRecyclerView.setAdapter(mPostRecyclerAdapter);
-        setSwipeForRecyclerView();
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (dy!=0){
-                    mPostRecyclerAdapter.removePending();
-                }
             }
         });
 
@@ -190,7 +147,6 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
     public void onPause() {
         super.onPause();
         mFab.setOnClickListener(null);
-        mPostRecyclerAdapter.removePending();
     }
 
     @Override
@@ -207,55 +163,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
 //        MenuInflater inflater = getMenuInflater();
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-//        inflater.inflate(R.menu.posts_actionbar_menu, menu);
-//        MenuItem item = menu.findItem(R.id.action_search);
-//        SearchView searchView = new SearchView((getActivity()).getSupportActionBar().getThemedContext());
-//        MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
-//        MenuItemCompat.setActionView(item, searchView);
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                mPostRecyclerAdapter.filter(newText);
-//                return true;
-//            }
-//        });
-//        optionsMenu = menu;
     }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle item selection
-//        switch (item.getItemId()) {
-//            case R.id.action_logout:
-//                return false;
-//            default:
-//                break;
-//        }
-//        return false;
-//    }
-
-
-//    private void populatePostsList(){
-//        // Construct the data source
-//        if (posts == null){
-//            posts = Post.getPosts();
-//        }
-//
-//        mRecyclerView = inflatedPosts.findViewById(R.id.rvPosts);
-//
-//        mRecyclerView.setHasFixedSize(true);
-//        llm = new LinearLayoutManager(getActivity());
-//        llm.setOrientation(LinearLayoutManager.VERTICAL);
-//        mRecyclerView.setLayoutManager(llm);
-//
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-//                mRecyclerView.getContext(), llm.getOrientation());
-//        mRecyclerView.addItemDecoration(dividerItemDecoration);
-//    }
 
     public void scrollToTop () {
         mRecyclerView.smoothScrollToPosition(0);
@@ -267,15 +175,26 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int swipedPosition = viewHolder.getAdapterPosition();
                 PostRecyclerAdapter adapter = (PostRecyclerAdapter) mRecyclerView.getAdapter();
-                adapter.pendingRemoval(swipedPosition);
+                adapter.remove(swipedPosition);
+                //noinspection ConstantConditions
+                mSnackbar = Snackbar.make(getActivity().findViewById(R.id.student_fragment_coordinator_layout),
+                        mPostRecyclerAdapter.removedCount() + " items removed",
+                        Snackbar.LENGTH_LONG);
+                mSnackbar.setAction("Undo", new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        mPostRecyclerAdapter.undoRemoved();
+                    }
+                });
+                mSnackbar.show();
             }
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int position = viewHolder.getAdapterPosition();
-                PostRecyclerAdapter adapter = (PostRecyclerAdapter) mRecyclerView.getAdapter();
-                if (adapter.isPendingRemoval(position)) {
-                    return 0;
-                }
+//                int position = viewHolder.getAdapterPosition();
+//                PostRecyclerAdapter adapter = (PostRecyclerAdapter) mRecyclerView.getAdapter();
+//                if (adapter.isPendingRemoval(position)) {
+//                    return 0;
+//                }
                 return super.getSwipeDirs(recyclerView, viewHolder);
             }
         };
@@ -329,17 +248,23 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
             mRecyclerView.setAdapter(mPostRecyclerAdapter);
         }
     }
-//    private void deletePost(DataSnapshot dataSnapshot){
-//        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-//            String taskTitle = singleSnapshot.getValue(String.class);
-//            for(int i = 0; i < posts.size(); i++){
-//                if(posts.get(i).getTask().equals(taskTitle)){
-//                    posts.remove(i);
-//                }
-//            }
-//            mPostRecyclerAdapter.notifyDataSetChanged();
-////            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
-////            mRecyclerView.setAdapter(mPostRecyclerAdapter);
-//        }
-//    }
+
+    private void refreshPosts() {
+        Query tQuery = mPostRef.orderByChild("uid").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        tQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                posts.clear();
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    Post nPost = postSnapshot.getValue(Post.class);
+                    posts.add(nPost);
+                    (mRecyclerView.getAdapter()).notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 }

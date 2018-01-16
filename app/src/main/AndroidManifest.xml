@@ -74,7 +74,7 @@
             android:name=".activities.PostCreateActivity"
             android:parentActivityName=".activities.StudentActivity" />
         <activity android:name=".activities.SearchActivity"
-            android:parentActivityName=".activities.TutorActivity"/>
+            android:parentActivityName=".activities.PostSearchActivity"/>
         <activity android:name=".activities.PostActivity"
             android:parentActivityName=".activities.StudentActivity"/>
         <activity android:name=".activities.PostSearchActivity"

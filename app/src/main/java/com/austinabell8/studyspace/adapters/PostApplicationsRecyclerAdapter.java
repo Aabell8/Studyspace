@@ -1,7 +1,6 @@
 package com.austinabell8.studyspace.adapters;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,26 +9,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.Post;
+import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by aabell on 7/18/2017.
  */
 
-public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PostApplicationsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Post> posts;
     private List<Post> mRemovedPosts;
@@ -37,8 +30,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context mContext;
     private static RecyclerViewClickListener itemListener;
 
-    public PostRecyclerAdapter(Context context, List<Post> posts,
-                               RecyclerViewClickListener itemListener){
+    public PostApplicationsRecyclerAdapter(Context context, List<Post> posts,
+                                           RecyclerViewClickListener itemListener){
         this.mContext = context;
         this.itemListener = itemListener;
         this.posts = posts;
@@ -111,7 +104,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void removeFromFirebase(final Post rPost){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
-                .child("posts")
+                .child("tutor_applications")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child(rPost.getPid());
         ref.removeValue();
     }
