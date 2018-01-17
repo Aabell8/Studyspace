@@ -23,7 +23,6 @@ public class User {
         fullName = _fullName;
         age = _age;
         role = "N";
-        rating = "4.6";
     }
 
     public String getUsername() {

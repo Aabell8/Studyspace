@@ -33,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText mPasswordText;
     private EditText mUsernameText;
     private EditText mEmailText;
+    private boolean mFacebook;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -53,8 +54,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mDatabase = FirebaseDatabase.getInstance();
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
-
-
         mSignupButton = findViewById(R.id.signup_button);
         mSignupButton.setOnClickListener(this);
         mLoginButton = findViewById(R.id.login_link);
@@ -65,6 +64,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mPasswordText = findViewById(R.id.input_password);
         mEmailText = findViewById(R.id.input_email);
 
+        Bundle data = getIntent().getExtras();
+        if(data!=null){
+            mFacebook = data.getBoolean("facebook");
+            String name = data.getString("name");
+            mNameText.setText(name);
+            mNameText.setEnabled(false);
+            mUsernameText.requestFocus();
+            String email = data.getString("email");
+            if(email!=null && !email.equals("")){
+                mEmailText.setText(email);
+                mEmailText.setEnabled(false);
+            }
+            else{
+                mEmailText.setVisibility(View.GONE);
+            }
+            String birthday = data.getString("birthday");
+
+        }
 
     }
 
@@ -99,37 +116,50 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        mFirebaseAuth.createUserWithEmailAndPassword(
-                mEmailText.getText().toString(), mPasswordText.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            final String name = mNameText.getText().toString().trim();
-                            final String username = mUsernameText.getText().toString().trim();
-                            final String age = mAgeText.getText().toString().trim();
-                            final String email = mEmailText.getText().toString().trim();
-                            final String uid = mFirebaseAuth.getCurrentUser().getUid();
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            SharedPreferences.Editor prefEditor = mPreferences.edit();
-                            prefEditor.putString("email", mEmailText.getText().toString());
-                            prefEditor.apply();
-                            progressDialog.hide();
-                            DatabaseReference usersRef = mRootRef.child("users");
-                            usersRef.child(uid).setValue(new User(username, email, name, age));
-                            onSignupSuccess();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Sign up failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            progressDialog.hide();
-                            mSignupButton.setEnabled(true);
-                        }
-                    }
+        if(mFacebook){
+            final String name = mNameText.getText().toString().trim();
+            final String username = mUsernameText.getText().toString().trim();
+            final String age = mAgeText.getText().toString().trim();
+            final String uid = mFirebaseAuth.getCurrentUser().getUid();
 
-                });
+            progressDialog.hide();
+            DatabaseReference usersRef = mRootRef.child("users");
+            usersRef.child(uid).setValue(new User(username, "facebook", name, age));
+            onSignupSuccess();
+        }
+        else {
+            mFirebaseAuth.createUserWithEmailAndPassword(
+                    mEmailText.getText().toString(), mPasswordText.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                final String name = mNameText.getText().toString().trim();
+                                final String username = mUsernameText.getText().toString().trim();
+                                final String age = mAgeText.getText().toString().trim();
+                                final String email = mEmailText.getText().toString().trim();
+                                final String uid = mFirebaseAuth.getCurrentUser().getUid();
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "createUserWithEmail:success");
+                                SharedPreferences.Editor prefEditor = mPreferences.edit();
+                                prefEditor.putString("email", mEmailText.getText().toString());
+                                prefEditor.apply();
+                                progressDialog.hide();
+                                DatabaseReference usersRef = mRootRef.child("users");
+                                usersRef.child(uid).setValue(new User(username, email, name, age));
+                                onSignupSuccess();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(RegisterActivity.this, "Sign up failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                progressDialog.hide();
+                                mSignupButton.setEnabled(true);
+                            }
+                        }
+
+                    });
+        }
 
     }
 
@@ -154,7 +184,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         String name = mNameText.getText().toString().trim();
         String username = mUsernameText.getText().toString().trim();
-        String email = mEmailText.getText().toString().trim();
+        String email;
+        if(mEmailText.getVisibility()!=View.GONE){
+            email = "";
+        }
+        else {
+            email = mEmailText.getText().toString().trim();
+        }
         String password = mPasswordText.getText().toString().trim();
 
         if (name.isEmpty() || name.length() < 3) {
@@ -168,14 +204,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             mUsernameText.setError("must be at least 5 characters");
             valid = false;
         } else {
-            mNameText.setError(null);
+            mUsernameText.setError(null);
         }
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            mAgeText.setError("enter a valid email address");
+        if (!mFacebook && (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
+            mEmailText.setError("enter a valid email address");
             valid = false;
-        } else {
-            mAgeText.setError(null);
+        } else if (!mFacebook) {
+            mEmailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {

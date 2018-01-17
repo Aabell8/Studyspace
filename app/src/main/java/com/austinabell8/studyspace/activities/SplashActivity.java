@@ -40,27 +40,28 @@ public class SplashActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String role = dataSnapshot.getValue(String.class);
                     if (role == null){
-                        Intent intent = new Intent(getParent(), LoginActivity.class);
+                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                     }
-                    Intent intent;
-                    assert role != null;
-                    switch (role) {
-                        case "N":
-                            intent = new Intent(SplashActivity.this, RoleActivity.class);
-                            startActivity(intent);
-                            break;
-                        case "S":
-                            intent = new Intent(SplashActivity.this, StudentActivity.class);
-                            startActivity(intent);
-                            break;
-                        case "T":
-                            intent = new Intent(SplashActivity.this, TutorActivity.class);
-                            startActivity(intent);
-                            break;
+                    else{
+                        Intent intent;
+                        switch (role) {
+                            case "N":
+                                intent = new Intent(SplashActivity.this, RoleActivity.class);
+                                startActivity(intent);
+                                break;
+                            case "S":
+                                intent = new Intent(SplashActivity.this, StudentActivity.class);
+                                startActivity(intent);
+                                break;
+                            case "T":
+                                intent = new Intent(SplashActivity.this, TutorActivity.class);
+                                startActivity(intent);
+                                break;
+                        }
+                        finish();
                     }
-                    finish();
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {

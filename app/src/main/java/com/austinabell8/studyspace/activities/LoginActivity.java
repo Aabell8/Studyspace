@@ -24,6 +24,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -40,6 +42,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -189,6 +197,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.signup_link:
                 Intent intent = new Intent (LoginActivity.this, RegisterActivity.class);
+                intent.putExtra("facebook", false);
                 startActivity(intent);
                 finish();
                 break;
@@ -227,7 +236,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "Austin8handleFacebookStart:" + token);
 
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mFirebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -237,10 +246,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "Austin8handleFacebookSuccess:success");
                             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             progressDialog.hide();
-                            Intent mainIntent = new Intent (LoginActivity.this, RegisterActivity.class);
-                            mainIntent.putExtra("facebook", "y");
-                            startActivity(mainIntent);
-                            finish();
+                            completeFBIntent();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "Austin8signInWithCredential:failure", task.getException());
@@ -250,8 +256,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             progressDialog.hide();
                         }
-
-                        // ...
                     }
                 });
     }
@@ -263,12 +267,80 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //    }
 
     private void completeIntent() {
-        DatabaseReference ref = mRootRef.child("users").child(mFirebaseAuth.getCurrentUser().getUid()).child("role");
+        DatabaseReference ref = mRootRef.child("users")
+                .child(mFirebaseAuth.getCurrentUser().getUid()).child("role");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String role = dataSnapshot.getValue(String.class);
                 if (role == null){
+                    return;
+                }
+                Intent intent;
+                switch (role) {
+                    case "N":
+                        intent = new Intent(LoginActivity.this, RoleActivity.class);
+                        startActivity(intent);
+                        break;
+                    case "S":
+                        intent = new Intent(LoginActivity.this, StudentActivity.class);
+                        startActivity(intent);
+                        break;
+                    case "T":
+                        intent = new Intent(LoginActivity.this, TutorActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                finish();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Studyspace", "Database error when retrieving role");
+            }
+        });
+    }
+
+    private void completeFBIntent() {
+        DatabaseReference ref = mRootRef.child("users")
+                .child(mFirebaseAuth.getCurrentUser().getUid()).child("role");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String role = dataSnapshot.getValue(String.class);
+                if (role == null){
+                    GraphRequest request = GraphRequest.newMeRequest(
+                            AccessToken.getCurrentAccessToken(),
+                            new GraphRequest.GraphJSONObjectCallback() {
+                                @Override
+                                public void onCompleted(JSONObject object, GraphResponse response) {
+                                    String name = "",lastName = "", email = "",birthday = "",gender;
+                                    // Application code
+                                    try {
+                                        if(object.has("name"))
+                                            name = object.getString("name");
+                                        if(object.has("last_name"))
+                                            lastName = object.getString("last_name");
+                                        if (object.has("email"))
+                                            email = object.getString("email");
+                                        if (object.has("birthday"))
+                                            birthday = object.getString("birthday");
+
+                                        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                                        intent.putExtra("facebook", true);
+                                        intent.putExtra("name",name);
+                                        intent.putExtra("email", email);
+                                        intent.putExtra("birthday", birthday);
+                                        startActivity(intent);
+                                        finish();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "email,name,link,birthday");
+                    request.setParameters(parameters);
+                    request.executeAsync();
                     return;
                 }
                 Intent intent;
