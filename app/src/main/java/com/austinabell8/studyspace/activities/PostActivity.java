@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.austinabell8.studyspace.R;
@@ -26,6 +27,7 @@ public class PostActivity extends AppCompatActivity {
     private PostsFragment.OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private ArrayList<User> users;
+    private Toolbar mToolbar;
 
     private ApplicantRecyclerAdapter mApplicantRecyclerAdapter;
     private LinearLayoutManager llm;
@@ -39,6 +41,13 @@ public class PostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar()!=null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Posts");
+        }
 
         Bundle data = getIntent().getExtras();
         String postId = null;

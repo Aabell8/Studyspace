@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -40,6 +41,7 @@ public class SearchActivity extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private SearchPostClickListener mRecyclerViewClickListener;
     private ProgressBar mSpinner;
+    private Toolbar mToolbar;
 
     private DatabaseReference mRootRef;
     private DatabaseReference mPostRef;
@@ -48,6 +50,13 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar()!=null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Posts");
+        }
 
         mRecyclerView = findViewById(R.id.rvPosts);
         mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -71,6 +80,7 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerViewClickListener = new SearchPostClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
+                //TODO: Intent to post details activity
             }
 
             @Override

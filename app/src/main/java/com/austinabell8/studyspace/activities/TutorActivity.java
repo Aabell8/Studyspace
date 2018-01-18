@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class TutorActivity extends AppCompatActivity
 
     private LockableViewPager viewPager;
     private BottomNavigationView navigation;
+    private Toolbar mToolbar;
 
     private boolean doubleBackToExitPressedOnce = false;
 
@@ -61,6 +63,12 @@ public class TutorActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_tutor);
+
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar()!=null){
+            getSupportActionBar().setTitle("Post Applications");
+        }
 
         initView();
         initializeData();
@@ -157,14 +165,17 @@ public class TutorActivity extends AppCompatActivity
             switch (item.getItemId()) {
                 case R.id.navigation_posts:
                     viewPager.setCurrentItem(0);
+                    getSupportActionBar().setTitle("Post Applications");
                     viewPager.setSwipeLocked(true);
                     return true;
                 case R.id.navigation_messages:
                     viewPager.setCurrentItem(1);
+                    getSupportActionBar().setTitle("Messages");
                     viewPager.setSwipeLocked(false);
                     return true;
                 case R.id.navigation_profile:
                     viewPager.setCurrentItem(2);
+                    getSupportActionBar().setTitle("Profile");
                     viewPager.setSwipeLocked(false);
                     return true;
             }

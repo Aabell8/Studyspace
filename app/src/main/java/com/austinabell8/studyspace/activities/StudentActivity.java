@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.fragments.MessagesFragment;
@@ -40,6 +41,7 @@ public class StudentActivity extends AppCompatActivity
 
     private LockableViewPager viewPager;
     private BottomNavigationView navigation;
+    private Toolbar mToolbar;
 
     private boolean doubleBackToExitPressedOnce = false;
 
@@ -53,6 +55,12 @@ public class StudentActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_student);
+
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar()!=null){
+            getSupportActionBar().setTitle("Posts");
+        }
 
         initView();
 
@@ -155,6 +163,8 @@ public class StudentActivity extends AppCompatActivity
             switch (item.getItemId()) {
                 case R.id.navigation_posts:
                     viewPager.setCurrentItem(0);
+                    getSupportActionBar().setTitle("Posts");
+
                     viewPager.setSwipeLocked(true);
                     return true;
 //                case R.id.navigation_create:
@@ -163,10 +173,12 @@ public class StudentActivity extends AppCompatActivity
 //                    return true;
                 case R.id.navigation_messages:
                     viewPager.setCurrentItem(1);
+                    getSupportActionBar().setTitle("Messages");
                     viewPager.setSwipeLocked(false);
                     return true;
                 case R.id.navigation_profile:
                     viewPager.setCurrentItem(2);
+                    getSupportActionBar().setTitle("Profile");
                     viewPager.setSwipeLocked(false);
                     return true;
             }

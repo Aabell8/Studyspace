@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,12 +20,20 @@ public class PostSearchActivity extends AppCompatActivity {
     private Button mSearchButton;
     private Spinner mCourseSpinner;
     private EditText mSearchText;
+    private Toolbar mToolbar;
 //    private String current;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_search);
+
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar()!=null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Search Posts");
+        }
 
         mCourseSpinner = findViewById(R.id.course_spinner);
         mSearchButton = findViewById(R.id.search_button);
@@ -47,16 +56,4 @@ public class PostSearchActivity extends AppCompatActivity {
         });
     }
 
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == 1) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                Bundle b = data.getExtras();
-//                final String pId = b.getString("Pid");
-//                Intent intent = new Intent();
-//                intent.putExtra("Pid", pId);
-//                setResult(Activity.RESULT_OK, intent);
-//                finish();
-//            }
-//        }
-//    }
 }

@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.Post;
 import com.austinabell8.studyspace.utils.SearchPostClickListener;
 import com.bumptech.glide.Glide;
@@ -21,7 +20,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -39,13 +37,11 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
     private Context mContext;
     private static SearchPostClickListener itemListener;
-//    private static RecyclerViewLongClickListener itemLongListener;
 
     public PostSearchRecyclerAdapter(Context context, List<Post> posts,
                                      SearchPostClickListener itemListener) {
         this.mContext = context;
         this.itemListener = itemListener;
-//        this.itemLongListener = itemLongListener;
         this.posts = posts;
     }
 
@@ -84,14 +80,11 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
                     StorageReference storageRef = FirebaseStorage.getInstance()
                             .getReference().child(location);
-//                    storageRef.getPath();
                     storageRef.getBytes(2048*2048).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
                             Glide.with(mContext)
                                     .load(bytes)
-//                                        .transform(new CircleTransform(getContext()))
-//                                            .asBitmap()
                                     .into(mViewHolder.profilePic);
                         }
                     });
@@ -102,9 +95,6 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
                 Log.e("PostSearch", "Error retrieving user");
             }
         });
-//        Glide.with(pHolder.productThumbnail)
-//                .load(p.getImage().getSrc())
-//                .into(pHolder.productThumbnail);
 
         if(itemListener != null){
             pHolder.regularLayout.setOnClickListener(new View.OnClickListener() {
@@ -125,16 +115,6 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             });
         }
 
-//        if(itemLongListener != null){
-//            pHolder.regularLayout.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    itemLongListener.recyclerViewListLongClicked(v, mViewHolder.getLayoutPosition());
-//                    return true;
-//                }
-//
-//            });
-//        }
     }
 
     @Override
@@ -145,15 +125,15 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
     private class PostSearchViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout regularLayout;
-        public ImageView profilePic;
-        public TextView name;
-        public TextView course;
-        public TextView description;
-        public TextView price;
-        public Button applyButton;
+        LinearLayout regularLayout;
+        ImageView profilePic;
+        TextView name;
+        TextView course;
+        TextView description;
+        TextView price;
+        Button applyButton;
 
-        public PostSearchViewHolder(View view) {
+        PostSearchViewHolder(View view) {
             super(view);
             regularLayout = view.findViewById(R.id.item_post);
             profilePic = view.findViewById(R.id.iv_post_item);

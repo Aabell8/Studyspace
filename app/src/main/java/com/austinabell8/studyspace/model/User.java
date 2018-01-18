@@ -11,6 +11,7 @@ public class User {
     private String age;
     private String profilePicLocation;
     private String rating;
+    private String rate;
     private Map<String, Object> posts;
 
     public User(){
@@ -83,5 +84,13 @@ public class User {
 
     public void setPosts(Map<String, Object> posts) {
         this.posts = posts;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
     }
 }

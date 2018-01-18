@@ -8,18 +8,32 @@
     android:layout_height="match_parent"
     tools:context="com.austinabell8.studyspace.activities.TutorActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/llMainActivity"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<FrameLayout-->
-        <!--android:id="@+id/fragmentContainer"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@+id/navigation"-->
-        <!--android:animateLayoutChanges="true" />-->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/AppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/colorPrimary"
+            android:minHeight="?attr/actionBarSize"/>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/llMainActivity"
+        android:layout_below="@id/AppBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <com.austinabell8.studyspace.utils.LockableViewPager
             android:id="@+id/view_pager_bottom_navigation"
             android:layout_width="match_parent"
@@ -40,6 +54,6 @@
 
     </LinearLayout>
 
-
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

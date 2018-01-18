@@ -23,7 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.austinabell8.studyspace.R;
+import com.austinabell8.studyspace.activities.ApplicantListActivity;
 import com.austinabell8.studyspace.activities.PostCreateActivity;
+import com.austinabell8.studyspace.activities.PostSearchActivity;
+import com.austinabell8.studyspace.activities.SearchActivity;
+import com.austinabell8.studyspace.activities.StudentActivity;
 import com.austinabell8.studyspace.adapters.PostRecyclerAdapter;
 import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.utils.SwipeUtil;
@@ -86,6 +90,21 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setLayoutManager(llm);
 
         posts = new ArrayList<>();
+
+        mRecyclerViewClickListener = new RecyclerViewClickListener() {
+            @Override
+            public void recyclerViewListClicked(View v, int position) {
+                if (position != -1){
+                    //Retrieve Id from item clicked, and pass it into an intent
+                    Intent intent = new Intent(v.getContext(), ApplicantListActivity.class);
+                    intent.putExtra("post_id", posts.get(position).getPid());
+                    startActivity(intent);
+                }
+            }
+            @Override
+            public void recyclerViewListLongClicked(View v, int position) {
+            }
+        };
 
         mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
         mRecyclerView.setAdapter(mPostRecyclerAdapter);
