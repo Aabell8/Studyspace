@@ -188,8 +188,8 @@ public class TPostsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int swipedPosition = viewHolder.getAdapterPosition();
-                PostRecyclerAdapter adapter = (PostRecyclerAdapter) mRecyclerView.getAdapter();
-                adapter.remove(swipedPosition);
+//                PostApplicationsRecyclerAdapter adapter = (PostApplicationsRecyclerAdapter) mRecyclerView.getAdapter();
+                mPostRecyclerAdapter.remove(swipedPosition);
                 //noinspection ConstantConditions
                 mSnackbar = Snackbar.make(getActivity().findViewById(R.id.tutor_fragment_coordinator_layout),
                         mPostRecyclerAdapter.removedCount() + " items removed",

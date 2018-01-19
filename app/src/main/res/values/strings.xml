@@ -34,12 +34,25 @@
     <string name="suggested_rate">Suggested Rate</string>
     <string name="rate">Rate</string>
     <string name="not_set">Not Set</string>
+    <string name="search">Search</string>
 
     <string-array name="subject_arrays">
-        <item>BUSINESS 2257A</item>
-        <item>PHILOSOP 2032F</item>
-        <item>CALC 1501A</item>
-        <item>STATS 2141A</item>
-
+        <item>BUSINESS 2257</item>
+        <item>PSYCHOL 1000</item>
+        <item>CALCULUS 1000</item>
+        <item>ECONOMIC 1021</item>
+        <item>CHEM 1302</item>
+        <item>ECONOMIC 1022</item>
+        <item>CHEM 1301</item>
+        <item>MATH 1228</item>
+        <item>COMPSCI 1033</item>
+        <item>GEOGRAPH 2144</item>
+        <item>BIOCHEM 2280</item>
+        <item>MOS 2275</item>
+        <item>MOS 2181</item>
+        <item>CHEM 2213</item>
+        <item>BIOLOGY 2382</item>
+        <item>PSYCHOL 2070</item>
+        <item>BIOLOGY 2581</item>
     </string-array>
 </resources>

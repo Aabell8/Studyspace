@@ -17,6 +17,7 @@ import android.widget.Spinner;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.model.Post;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -26,7 +27,7 @@ public class PostCreateActivity extends AppCompatActivity {
 
     private EditText mPriceText;
     private Button mCreateButton;
-    private Spinner mCourseSpinner;
+    private SearchableSpinner mCourseSpinner;
     private EditText mDescriptionText;
     private String current;
     private Toolbar mToolbar;
@@ -42,6 +43,7 @@ public class PostCreateActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Create Post");
         }
+
 
         current = "";
 

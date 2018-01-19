@@ -28,7 +28,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
@@ -51,15 +51,15 @@
                     android:minLines="3" />
             </android.support.design.widget.TextInputLayout>
 
-            <Spinner
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                 android:id="@+id/course_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:entries="@array/spinner_array"
+                android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:entries="@array/subject_arrays"
-                android:prompt="@string/subject_prompt" />
+                android:layout_marginRight="8dp" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
