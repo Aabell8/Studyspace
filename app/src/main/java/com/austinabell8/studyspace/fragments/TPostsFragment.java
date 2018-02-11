@@ -160,25 +160,6 @@ public class TPostsFragment extends Fragment implements View.OnClickListener {
         void onFragmentInteraction(Uri uri);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        MenuInflater inflater = getMenuInflater();
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_logout:
-                return false;
-            default:
-                break;
-        }
-        return false;
-    }
-
     public void scrollToTop () {
         mRecyclerView.smoothScrollToPosition(0);
     }

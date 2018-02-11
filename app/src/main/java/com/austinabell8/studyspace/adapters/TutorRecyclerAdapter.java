@@ -1,6 +1,7 @@
 package com.austinabell8.studyspace.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class TutorRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View mView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_tutor, parent, false);
+                .inflate(R.layout.card_tutor, parent, false);
 
         final TutorViewHolder mViewHolder = new TutorViewHolder(mView);
 
@@ -85,7 +86,7 @@ public class TutorRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         if(itemListener != null){
-            pHolder.regularLayout.setOnClickListener(new View.OnClickListener() {
+            pHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     itemListener.recyclerViewListClicked(v, mViewHolder.getLayoutPosition());
@@ -104,7 +105,7 @@ public class TutorRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private class TutorViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout regularLayout;
+        CardView cardView;
         ImageView profilePic;
         TextView name;
         TextView rating;
@@ -113,7 +114,7 @@ public class TutorRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         TutorViewHolder(View view) {
             super(view);
-            regularLayout = view.findViewById(R.id.item_post);
+            cardView = view.findViewById(R.id.card_view_item_tutor);
             profilePic = view.findViewById(R.id.iv_post_item);
             name = view.findViewById(R.id.tutor_name);
             rating = view.findViewById(R.id.tutor_rating);

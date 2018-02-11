@@ -4,11 +4,10 @@
     android:layout_height="match_parent"
     tools:context="com.austinabell8.studyspace.fragments.MessagesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/messages" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvConversations"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
 </FrameLayout>

@@ -35,6 +35,8 @@
     <string name="rate">Rate</string>
     <string name="not_set">Not Set</string>
     <string name="search">Search</string>
+    <string name="send_button_description">send_button</string>
+    <string name="message_prompt">Write a message</string>
 
     <string-array name="subject_arrays">
         <item>BUSINESS 2257</item>
@@ -54,5 +56,15 @@
         <item>BIOLOGY 2382</item>
         <item>PSYCHOL 2070</item>
         <item>BIOLOGY 2581</item>
+    </string-array>
+
+    <string-array name="referred_array">
+        <item>Choose One</item>
+        <item>Student Ambassador</item>
+        <item>Facebook</item>
+        <item>Instagram</item>
+        <item>From a friend</item>
+        <item>LinkedIn</item>
+        <item>Other</item>
     </string-array>
 </resources>

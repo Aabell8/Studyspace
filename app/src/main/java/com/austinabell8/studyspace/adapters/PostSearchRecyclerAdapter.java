@@ -16,6 +16,7 @@ import com.austinabell8.studyspace.model.Post;
 import com.austinabell8.studyspace.utils.SearchPostClickListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +53,8 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
         View mView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_post_search, parent, false);
 
+
+
         final PostSearchViewHolder mViewHolder = new PostSearchViewHolder(mView);
 
         return mViewHolder;
@@ -60,7 +63,7 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Post p = posts.get(position);
-        PostSearchViewHolder pHolder = (PostSearchViewHolder) holder;
+        final PostSearchViewHolder pHolder = (PostSearchViewHolder) holder;
 
         //Update data in PostSearchViewHolder
         pHolder.name.setText(p.getName());
@@ -68,11 +71,27 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
         pHolder.description.setText(p.getDescription());
         pHolder.price.setText(p.getPrice());
 
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+        ref.child("tutor_applications").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(p.getPid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()!=null && dataSnapshot.getValue().equals(true)){
+                    pHolder.applyButton.setText(R.string.applied);
+                    pHolder.applyButton.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("PostSearch: ", "Failed to retrieve applied value");
+            }
+        });
+
         final PostSearchViewHolder mViewHolder = pHolder;
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
-                .child("users/"+p.getUid()+"/profilePicLocation");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child("users/"+p.getUid()+"/profilePicLocation")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String location = dataSnapshot.getValue(String.class);

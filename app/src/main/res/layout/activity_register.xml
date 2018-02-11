@@ -16,7 +16,7 @@
 
         <TextView
             android:text="@string/app_name"
-            android:fontFamily="@font/moon_bold"
+            android:fontFamily="@font/league_spartan_bold"
             android:textSize="20pt"
             android:textColor="@color/md_white_1000"
             android:layout_width="wrap_content"
@@ -26,11 +26,13 @@
 
         <!-- Name Label -->
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="5dp"
             android:theme="@style/TextLabel">
-            <EditText android:id="@+id/input_name"
+            <EditText
+                android:id="@+id/input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
@@ -40,11 +42,13 @@
 
         <!-- Address Label -->
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="5dp"
             android:theme="@style/TextLabel">
-            <EditText android:id="@+id/input_username"
+            <EditText
+                android:id="@+id/input_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
@@ -54,11 +58,13 @@
 
         <!--  Email Label -->
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="5dp"
             android:theme="@style/TextLabel">
-            <EditText android:id="@+id/input_email"
+            <EditText
+                android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
@@ -68,11 +74,13 @@
 
         <!--  Age Label -->
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilAge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="5dp"
             android:theme="@style/TextLabel">
-            <EditText android:id="@+id/input_age"
+            <EditText
+                android:id="@+id/input_age"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
@@ -82,11 +90,13 @@
 
         <!-- Password Label -->
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="5dp"
             android:theme="@style/TextLabel">
-            <EditText android:id="@+id/input_password"
+            <EditText
+                android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
@@ -96,17 +106,55 @@
 
         <!-- Password Re-enter Label -->
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilRePassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="5dp"
             android:theme="@style/TextLabel">
-            <EditText android:id="@+id/input_reEnterPassword"
+            <EditText
+                android:id="@+id/input_reEnterPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
                 android:inputType="textPassword"
                 android:hint="Re-enter Password"/>
         </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="6dp"
+            android:textColor="@color/md_grey_800"
+            android:text="How did you hear about us? (Optional)"
+            android:gravity="center"
+            android:textSize="16dip"/>
+
+        <Spinner
+            android:id="@+id/course_spinner"
+            android:backgroundTint="@color/md_white_1000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp" />
+
+        <!-- Password Re-enter Label -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilOther"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone"
+            android:theme="@style/TextLabel">
+            <EditText
+                android:id="@+id/input_other"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_white_1000"
+                android:hint=""/>
+        </android.support.design.widget.TextInputLayout>
+
 
         <!-- Signup Button -->
         <android.support.v7.widget.AppCompatButton

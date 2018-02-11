@@ -60,9 +60,9 @@ public class ApplicantListActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                llm.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                llm.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
         mRecyclerView.setLayoutManager(llm);
 
         users = new ArrayList<>();

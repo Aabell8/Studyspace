@@ -113,6 +113,23 @@ public class SearchActivity extends AppCompatActivity {
                 mSpinner.setVisibility(View.GONE);
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+//                    final String pId = postSnapshot.getKey();
+//                    mRootRef.child("tutor_applications")
+//                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                            .child(pId)
+//                            .addValueEventListener(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                    Log.e("Test: ", dataSnapshot.toString());
+//                                    if(dataSnapshot.getValue()==true){
+//
+//                                    }
+//                                }
+//                                @Override
+//                                public void onCancelled(DatabaseError databaseError) {
+//                                    Log.e("Search", "application query failed");
+//                                }
+//                            });
                     Post nPost = postSnapshot.getValue(Post.class);
                     posts.add(nPost);
                     (mRecyclerView.getAdapter()).notifyDataSetChanged();

@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +26,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.w3c.dom.Text;
+
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "RegisterActivity";
@@ -31,9 +37,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText mNameText;
     private EditText mAgeText;
     private EditText mPasswordText;
+    private EditText mRePasswordText;
     private EditText mUsernameText;
     private EditText mEmailText;
+
+    private TextInputLayout mNameTil;
+    private TextInputLayout mAgeTil;
+    private TextInputLayout mPasswordTil;
+    private TextInputLayout mRePasswordTil;
+    private TextInputLayout mUsernameTil;
+    private TextInputLayout mEmailTil;
+    private TextInputLayout mOtherTil;
     private boolean mFacebook;
+    private Spinner mSpinner;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -62,24 +78,50 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mUsernameText = findViewById(R.id.input_username);
         mAgeText = findViewById(R.id.input_age);
         mPasswordText = findViewById(R.id.input_password);
+        mRePasswordText = findViewById(R.id.input_reEnterPassword);
         mEmailText = findViewById(R.id.input_email);
+
+        mSpinner = findViewById(R.id.course_spinner);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(RegisterActivity.this,
+                R.layout.register_spinner_item, getResources().getStringArray(R.array.referred_array));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
+        mOtherTil = findViewById(R.id.tilOther);
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (adapterView.getItemAtPosition(i).toString().equals("Other")){
+                    mOtherTil.setVisibility(View.VISIBLE);
+                }
+                else {
+                    mOtherTil.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         Bundle data = getIntent().getExtras();
         if(data!=null){
+            mFacebook = false;
             mFacebook = data.getBoolean("facebook");
-            String name = data.getString("name");
-            mNameText.setText(name);
-            mNameText.setEnabled(false);
-            mUsernameText.requestFocus();
-            String email = data.getString("email");
-            if(email!=null && !email.equals("")){
-                mEmailText.setText(email);
-                mEmailText.setEnabled(false);
+            if(mFacebook){
+                String name = data.getString("name");
+                mNameText.setText(name);
+                mNameText.setEnabled(false);
+                mUsernameText.requestFocus();
+                String email = data.getString("email");
+                if(email!=null && !email.equals("")){
+                    mEmailText.setText(email);
+                    mEmailText.setEnabled(false);
+                }
+                else{
+                    mEmailText.setVisibility(View.GONE);
+                }
+                //String birthday = data.getString("birthday");
             }
-            else{
-                mEmailText.setVisibility(View.GONE);
-            }
-            String birthday = data.getString("birthday");
 
         }
 
@@ -182,43 +224,61 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public boolean validate() {
         boolean valid = true;
 
+        mNameTil = findViewById(R.id.tilName);
+        mNameTil.setErrorEnabled(true);
+        mEmailTil = findViewById(R.id.tilEmail);
+        mEmailTil.setErrorEnabled(true);
+        mUsernameTil = findViewById(R.id.tilUsername);
+        mUsernameTil.setErrorEnabled(true);
+        mAgeTil = findViewById(R.id.tilAge);
+        mAgeTil.setErrorEnabled(true);
+        mPasswordTil = findViewById(R.id.tilPassword);
+        mPasswordTil.setErrorEnabled(true);
+        mRePasswordTil = findViewById(R.id.tilRePassword);
+        mRePasswordTil.setErrorEnabled(true);
+
         String name = mNameText.getText().toString().trim();
         String username = mUsernameText.getText().toString().trim();
         String email;
-        if(mEmailText.getVisibility()!=View.GONE){
+        if(mEmailText.getVisibility()==View.GONE){
             email = "";
         }
         else {
             email = mEmailText.getText().toString().trim();
         }
         String password = mPasswordText.getText().toString().trim();
+        String rePassword = mRePasswordText.getText().toString().trim();
 
         if (name.isEmpty() || name.length() < 3) {
-            mNameText.setError("must be at least 3 characters");
+            mNameTil.setError("must be at least 3 characters");
             valid = false;
         } else {
-            mNameText.setError(null);
+            mNameTil.setError(null);
         }
 
         if (username.isEmpty() || username.length() < 5) {
-            mUsernameText.setError("must be at least 5 characters");
+            mUsernameTil.setError("must be at least 5 characters");
             valid = false;
         } else {
-            mUsernameText.setError(null);
+            mUsernameTil.setError(null);
         }
 
-        if (!mFacebook && (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
-            mEmailText.setError("enter a valid email address");
+        if (!mFacebook && (email.isEmpty() /*|| !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()*/)) {
+            mEmailTil.setError("enter a valid email address");
             valid = false;
         } else if (!mFacebook) {
-            mEmailText.setError(null);
+            mEmailTil.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            mPasswordText.setError("between 4 and 10 alphanumeric characters");
+            mPasswordTil.setError("between 4 and 10 alphanumeric characters");
             valid = false;
-        } else {
-            mPasswordText.setError(null);
+        }
+        else if(!password.equals(rePassword)){
+            mPasswordTil.setError("between 4 and 10 alphanumeric characters");
+        }
+        else {
+            mPasswordTil.setError(null);
         }
 
         return valid;

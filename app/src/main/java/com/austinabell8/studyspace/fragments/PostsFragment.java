@@ -177,13 +177,6 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         void onFragmentInteraction(Uri uri);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        MenuInflater inflater = getMenuInflater();
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-    }
-
     public void scrollToTop () {
         mRecyclerView.smoothScrollToPosition(0);
     }
@@ -231,7 +224,9 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
             if(resultCode == Activity.RESULT_OK){
                 Bundle b = data.getExtras();
                 final Post post = b.getParcelable("post_item");
-                post.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                if (post != null) {
+                    post.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                }
                 DatabaseReference ref = mRootRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("fullName");
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
