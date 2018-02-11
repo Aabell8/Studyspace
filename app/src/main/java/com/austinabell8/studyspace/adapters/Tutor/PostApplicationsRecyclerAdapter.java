@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace.adapters;
+package com.austinabell8.studyspace.adapters.Tutor;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -104,9 +104,9 @@ public class PostApplicationsRecyclerAdapter extends RecyclerView.Adapter<Recycl
 
     private void removeFromFirebase(final Post rPost){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
-                .child("tutor_applications")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(rPost.getPid());
+                .child("post_applicants")
+                .child(rPost.getPid())
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         ref.removeValue();
     }
 

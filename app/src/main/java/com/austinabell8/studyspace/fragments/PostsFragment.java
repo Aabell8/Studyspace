@@ -17,18 +17,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.activities.ApplicantListActivity;
-import com.austinabell8.studyspace.activities.PostCreateActivity;
-import com.austinabell8.studyspace.activities.PostSearchActivity;
-import com.austinabell8.studyspace.activities.SearchActivity;
-import com.austinabell8.studyspace.activities.StudentActivity;
-import com.austinabell8.studyspace.adapters.PostRecyclerAdapter;
+import com.austinabell8.studyspace.activities.Student.ApplicantListActivity;
+import com.austinabell8.studyspace.activities.Student.PostCreateActivity;
+import com.austinabell8.studyspace.adapters.Student.PostRecyclerAdapter;
 import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.utils.SwipeUtil;
 import com.austinabell8.studyspace.model.Post;
@@ -202,11 +197,6 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
             }
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-//                int position = viewHolder.getAdapterPosition();
-//                PostRecyclerAdapter adapter = (PostRecyclerAdapter) mRecyclerView.getAdapter();
-//                if (adapter.isPendingRemoval(position)) {
-//                    return 0;
-//                }
                 return super.getSwipeDirs(recyclerView, viewHolder);
             }
         };
@@ -244,7 +234,6 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                 });
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
             }
         }
     }
@@ -254,14 +243,14 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         startActivityForResult(i, 1);
     }
 
-    private void getAllPosts(DataSnapshot dataSnapshot){
-        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-            Post nPost = singleSnapshot.getValue(Post.class);
-            posts.add(nPost);
-            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
-            mRecyclerView.setAdapter(mPostRecyclerAdapter);
-        }
-    }
+//    private void getAllPosts(DataSnapshot dataSnapshot){
+//        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//            Post nPost = singleSnapshot.getValue(Post.class);
+//            posts.add(nPost);
+//            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
+//            mRecyclerView.setAdapter(mPostRecyclerAdapter);
+//        }
+//    }
 
     private void refreshPosts() {
         Query tQuery = mPostRef.orderByChild("uid").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());

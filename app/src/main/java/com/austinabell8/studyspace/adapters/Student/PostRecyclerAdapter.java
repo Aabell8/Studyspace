@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace.adapters;
+package com.austinabell8.studyspace.adapters.Student;
 
 import android.content.Context;
 import android.os.Handler;
@@ -113,6 +113,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
                 .child("posts")
                 .child(rPost.getPid());
+        ref.removeValue();
+        ref = FirebaseDatabase.getInstance().getReference()
+                .child("post_applicants/"+rPost.getPid());
         ref.removeValue();
     }
 

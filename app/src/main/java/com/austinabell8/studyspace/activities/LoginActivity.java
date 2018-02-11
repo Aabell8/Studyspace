@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.austinabell8.studyspace.R;
+import com.austinabell8.studyspace.activities.Student.StudentActivity;
+import com.austinabell8.studyspace.activities.Tutor.TutorActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -45,9 +47,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 

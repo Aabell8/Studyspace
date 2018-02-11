@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace.adapters;
+package com.austinabell8.studyspace.adapters.Tutor;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -73,11 +73,12 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
-        ref.child("tutor_applications").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(p.getPid()).addValueEventListener(new ValueEventListener() {
+        ref.child("post_applicants").child(p.getPid())
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue()!=null && dataSnapshot.getValue().equals(true)){
+                if (dataSnapshot.getValue()!=null){
                     pHolder.applyButton.setText(R.string.applied);
                     pHolder.applyButton.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
                 }

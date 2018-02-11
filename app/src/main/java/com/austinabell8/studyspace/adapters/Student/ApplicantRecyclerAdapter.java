@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace.adapters;
+package com.austinabell8.studyspace.adapters.Student;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -12,31 +12,36 @@ import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.model.User;
-import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
+import com.austinabell8.studyspace.utils.ApplicantClickListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
 /**
- * TutorRecyclerAdapter - Adapter for recycler view of users from MainActivity
+ * ApplicantRecyclerAdapter - Adapter for recycler view of users from MainActivity
  * @author  Austin Abell
  */
 
-public class TutorRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ApplicantRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<User> users;
 
     private Context mContext;
-    private static RecyclerViewClickListener itemListener;
+    private String postId;
+    private static ApplicantClickListener itemListener;
+    private DatabaseReference mApplicantRef;
 
-    public TutorRecyclerAdapter(Context context, List<User> users,
-                                     RecyclerViewClickListener itemListener) {
+    public ApplicantRecyclerAdapter(Context context, List<User> users,
+                                    ApplicantClickListener itemListener, String postId) {
         this.mContext = context;
         this.itemListener = itemListener;
         this.users = users;
+        this.postId = postId;
     }
 
 
@@ -47,34 +52,41 @@ public class TutorRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 .inflate(R.layout.card_tutor, parent, false);
 
         final TutorViewHolder mViewHolder = new TutorViewHolder(mView);
+        mApplicantRef = FirebaseDatabase.getInstance().getReference().child("post_applicants");
 
         return mViewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        User p = users.get(position);
+        User user = users.get(position);
+//        DatabaseReference postRef = mApplicantRef.child(postId)
         TutorViewHolder pHolder = (TutorViewHolder) holder;
 
         //Update data in TutorViewHolder
-        pHolder.name.setText(p.getFullName());
-        if(p.getRating()!=null){
-            pHolder.rating.setText(p.getRating());
+        pHolder.name.setText(user.getFullName());
+        if(user.getRating()!=null){
+            pHolder.rating.setText(user.getRating());
         }
-        pHolder.note.setText(p.getUsername());
-        if(p.getRate()!=null){
-            pHolder.rate.setText(p.getRate());
+        pHolder.note.setText(user.getUsername());
+        if(user.getRate()!=null){
+            pHolder.rate.setText(user.getRate());
         }
         else{
             pHolder.rate.setText(R.string.not_set);
         }
+        if(user.isAccepted()){
+            pHolder.cardView
+                    .setCardBackgroundColor(mContext.getResources().getColor(R.color.md_teal_100));
+        }
+
 
         final TutorViewHolder mViewHolder = pHolder;
 
-        if (p.getProfilePicLocation() != null){
+        if (user.getProfilePicLocation() != null){
 
             StorageReference storageRef = FirebaseStorage.getInstance()
-                    .getReference().child(p.getProfilePicLocation());
+                    .getReference().child(user.getProfilePicLocation());
             storageRef.getBytes(2048*2048).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
@@ -85,13 +97,27 @@ public class TutorRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
             });
         }
 
-        if(itemListener != null){
-            pHolder.cardView.setOnClickListener(new View.OnClickListener() {
+        if(itemListener != null) {
+            pHolder.viewLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemListener.recyclerViewListClicked(v, mViewHolder.getLayoutPosition());
+                    itemListener.messageClick(v, mViewHolder.getLayoutPosition());
                 }
-
+            });
+            pHolder.viewLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    itemListener.acceptClick(v, mViewHolder.getLayoutPosition());
+                    mViewHolder.cardView
+                            .setCardBackgroundColor(mContext.getResources().getColor(R.color.md_teal_100));
+                    return true;
+                }
+            });
+            pHolder.profilePic.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    itemListener.userDetailsClick(v, mViewHolder.getLayoutPosition());
+                }
             });
         }
 
@@ -104,6 +130,7 @@ public class TutorRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
     private class TutorViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout viewLayout;
 
         CardView cardView;
         ImageView profilePic;
@@ -114,12 +141,15 @@ public class TutorRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         TutorViewHolder(View view) {
             super(view);
+            viewLayout = view.findViewById(R.id.item_post);
             cardView = view.findViewById(R.id.card_view_item_tutor);
             profilePic = view.findViewById(R.id.iv_post_item);
             name = view.findViewById(R.id.tutor_name);
             rating = view.findViewById(R.id.tutor_rating);
             note = view.findViewById(R.id.tutor_note);
             rate = view.findViewById(R.id.suggested_rate_value);
+
+
 
         }
 

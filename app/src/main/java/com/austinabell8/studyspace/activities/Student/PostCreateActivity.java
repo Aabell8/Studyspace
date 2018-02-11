@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace.activities;
+package com.austinabell8.studyspace.activities.Student;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.model.Post;
@@ -21,7 +20,6 @@ import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 
 public class PostCreateActivity extends AppCompatActivity {
 

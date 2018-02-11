@@ -65,7 +65,7 @@ public class ConversationActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("");//TODO: add name into title
         }
 
-        mUsername = ANONYMOUS;
+        mUsername = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         Bundle data = getIntent().getExtras();
         String conversationId = "";

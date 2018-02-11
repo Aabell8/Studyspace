@@ -10,10 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.activities.ApplicantListActivity;
 import com.austinabell8.studyspace.activities.ConversationActivity;
 import com.austinabell8.studyspace.adapters.ConversationRecyclerAdapter;
 import com.austinabell8.studyspace.model.Conversation;
@@ -115,7 +113,6 @@ public class MessagesFragment extends Fragment implements View.OnClickListener {
                 "Austin Abell",
                 "Want to meet up at Weldon at 6pm?",
                 "");
-        conversations.add(c);
         conversations.add(c);
         mConversationRecyclerAdapter.notifyDataSetChanged();
     }

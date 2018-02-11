@@ -13,6 +13,8 @@ public class User {
     private String rating;
     private String rate;
     private Map<String, Object> posts;
+    private boolean accepted;
+    private String uid;
 
     public User(){
 
@@ -92,5 +94,21 @@ public class User {
 
     public void setRate(String rate) {
         this.rate = rate;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

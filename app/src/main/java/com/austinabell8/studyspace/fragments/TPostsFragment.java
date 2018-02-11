@@ -15,16 +15,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.activities.PostSearchActivity;
-import com.austinabell8.studyspace.adapters.PostApplicationsRecyclerAdapter;
-import com.austinabell8.studyspace.adapters.PostRecyclerAdapter;
+import com.austinabell8.studyspace.activities.Tutor.PostSearchInputActivity;
+import com.austinabell8.studyspace.adapters.Tutor.PostApplicationsRecyclerAdapter;
 import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.utils.SwipeUtil;
 import com.austinabell8.studyspace.model.Post;
@@ -202,34 +198,36 @@ public class TPostsFragment extends Fragment implements View.OnClickListener {
     }
 
     public void SearchPost() {
-        Intent i = new Intent(this.getActivity(), PostSearchActivity.class);
+        Intent i = new Intent(this.getActivity(), PostSearchInputActivity.class);
         startActivity(i);
     }
 
     private void refreshPostApplications () {
-        final DatabaseReference currentUserRef = mRootRef.child("tutor_applications")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        currentUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mPostRecyclerAdapter.clearRemoved();
+        final DatabaseReference postApplicantRef = mRootRef.child("post_applicants");
+        postApplicantRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mPosts.clear();
                 for (DataSnapshot post : dataSnapshot.getChildren()) {
-                    final String pId = post.getKey();
-                    mPostRef.child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.getValue()!=null){
-                                mPosts.add(dataSnapshot.getValue(Post.class));
-                                mPostRecyclerAdapter.notifyDataSetChanged();
+                    if (post.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getValue() != null){
+                        final String uId = post.getKey();
+                        mPostRef.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.getValue()!=null){
+                                    mPosts.add(dataSnapshot.getValue(Post.class));
+                                    mPostRecyclerAdapter.notifyDataSetChanged();
+                                }
+                                else {
+                                    postApplicantRef.child(uId).removeValue();
+                                }
                             }
-                            else {
-                                currentUserRef.child(pId).removeValue();
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
                             }
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                    });
+                        });
+                    }
                 }
             }
 

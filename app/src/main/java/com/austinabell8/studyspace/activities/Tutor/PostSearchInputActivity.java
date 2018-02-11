@@ -1,6 +1,5 @@
-package com.austinabell8.studyspace.activities;
+package com.austinabell8.studyspace.activities.Tutor;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,9 +11,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.model.Post;
 
-public class PostSearchActivity extends AppCompatActivity {
+public class PostSearchInputActivity extends AppCompatActivity {
 
     private EditText mPriceText;
     private Button mSearchButton;
@@ -48,7 +46,7 @@ public class PostSearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //stores values of spinner and editText on a searchButton event
-                Intent intent = new Intent(PostSearchActivity.this, SearchActivity.class);
+                Intent intent = new Intent(PostSearchInputActivity.this, SearchActivity.class);
                 intent.putExtra("course", mCourseSpinner.getItemAtPosition(mCourseSpinner.getSelectedItemPosition()).toString());
                 intent.putExtra("search_text", mSearchText.getText().toString());
                 startActivity(intent);

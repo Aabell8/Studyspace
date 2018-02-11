@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.austinabell8.studyspace.R;
+import com.austinabell8.studyspace.activities.Student.StudentActivity;
+import com.austinabell8.studyspace.activities.Tutor.TutorActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

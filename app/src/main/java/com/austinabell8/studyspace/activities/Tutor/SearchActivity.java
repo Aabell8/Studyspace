@@ -1,7 +1,6 @@
-package com.austinabell8.studyspace.activities;
+package com.austinabell8.studyspace.activities.Tutor;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,11 +13,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.austinabell8.studyspace.R;
-import com.austinabell8.studyspace.adapters.PostSearchRecyclerAdapter;
-import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
+import com.austinabell8.studyspace.adapters.Tutor.PostSearchRecyclerAdapter;
 import com.austinabell8.studyspace.model.Post;
 import com.austinabell8.studyspace.utils.SearchPostClickListener;
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -88,17 +84,11 @@ public class SearchActivity extends AppCompatActivity {
                 final Post clicked = posts.get(position);
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference ref = firebaseDatabase
-                        .getReference().child("tutor_applications");
+                        .getReference().child("post_applicants");
                 Map<String,Object> taskMap = new HashMap<>();
-                taskMap.put(clicked.getPid(), true);
-                ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .updateChildren(taskMap);
-                ref.getParent().child("post_applicants");
-//                Glide.with(mRecyclerView.getContext()).pauseRequests();
-//                Intent intent = new Intent();
-//                intent.putExtra("Pid", clicked.getPid());
+                taskMap.put(FirebaseAuth.getInstance().getCurrentUser().getUid(), false);
+                ref.child(clicked.getPid()).updateChildren(taskMap);
                 setResult(Activity.RESULT_OK);
-//                finish();
             }
         };
 
@@ -113,23 +103,6 @@ public class SearchActivity extends AppCompatActivity {
                 mSpinner.setVisibility(View.GONE);
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-//                    final String pId = postSnapshot.getKey();
-//                    mRootRef.child("tutor_applications")
-//                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                            .child(pId)
-//                            .addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(DataSnapshot dataSnapshot) {
-//                                    Log.e("Test: ", dataSnapshot.toString());
-//                                    if(dataSnapshot.getValue()==true){
-//
-//                                    }
-//                                }
-//                                @Override
-//                                public void onCancelled(DatabaseError databaseError) {
-//                                    Log.e("Search", "application query failed");
-//                                }
-//                            });
                     Post nPost = postSnapshot.getValue(Post.class);
                     posts.add(nPost);
                     (mRecyclerView.getAdapter()).notifyDataSetChanged();

@@ -1,4 +1,4 @@
-package com.austinabell8.studyspace.activities;
+package com.austinabell8.studyspace.activities.Student;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -20,6 +20,7 @@ import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
 import com.austinabell8.studyspace.R;
+import com.austinabell8.studyspace.activities.LoginActivity;
 import com.austinabell8.studyspace.fragments.MessagesFragment;
 import com.austinabell8.studyspace.fragments.PostsFragment;
 import com.austinabell8.studyspace.fragments.ProfileFragment;

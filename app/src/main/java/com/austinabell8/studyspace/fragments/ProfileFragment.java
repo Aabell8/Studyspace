@@ -42,6 +42,7 @@ import java.util.UUID;
 
 
 import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
@@ -93,7 +94,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         mEmailText = inflatedProfile.findViewById(R.id.email_text);
 
         mImageView = inflatedProfile.findViewById(R.id.profilePicture);
-        Glide.with(getContext())
+        Glide.with(getApplicationContext())
                 .load(R.drawable.com_facebook_profile_picture_blank_portrait)
                 .into(mImageView);
 
@@ -202,7 +203,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             storageRef.getBytes(1024*1024 * 5).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
-                                    Glide.with(getContext())
+                                    Glide.with(getApplicationContext())
                                             .load(bytes)
 //                                            .transform(new CircleTransform(getContext()))
                                             .into(imageView);
@@ -242,7 +243,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         storageRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                             @Override
                             public void onSuccess(byte[] bytes) {
-                                Glide.with(getContext())
+                                Glide.with(getApplicationContext())
                                         .load(bytes)
 //                                        .transform(new CircleTransform(getContext()))
 //                                            .asBitmap()

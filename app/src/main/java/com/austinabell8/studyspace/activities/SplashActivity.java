@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.austinabell8.studyspace.activities.Student.StudentActivity;
+import com.austinabell8.studyspace.activities.Tutor.TutorActivity;
 import com.facebook.login.LoginManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;

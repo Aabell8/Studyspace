@@ -53,13 +53,13 @@
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".activities.StudentActivity"
+            android:name=".activities.Student.StudentActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.TutorActivity"
+            android:name=".activities.Tutor.TutorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -70,20 +70,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.PostCreateActivity"
-            android:parentActivityName=".activities.StudentActivity" />
+            android:name=".activities.Student.PostCreateActivity"
+            android:parentActivityName=".activities.Student.StudentActivity" />
         <activity
-            android:name=".activities.SearchActivity"
-            android:parentActivityName=".activities.PostSearchActivity" />
+            android:name=".activities.Tutor.SearchActivity"
+            android:parentActivityName=".activities.Tutor.PostSearchInputActivity" />
         <activity
-            android:name=".activities.PostActivity"
-            android:parentActivityName=".activities.StudentActivity" />
+            android:name=".activities.Tutor.PostSearchInputActivity"
+            android:parentActivityName=".activities.Tutor.TutorActivity" />
         <activity
-            android:name=".activities.PostSearchActivity"
-            android:parentActivityName=".activities.TutorActivity" />
-        <activity
-            android:name=".activities.ApplicantListActivity"
-            android:parentActivityName=".activities.StudentActivity" />
+            android:name=".activities.Student.ApplicantListActivity"
+            android:parentActivityName=".activities.Student.StudentActivity" />
         <activity android:name=".activities.UserDetailsActivity" />
         <activity android:name=".activities.ConversationActivity"></activity>
     </application>
