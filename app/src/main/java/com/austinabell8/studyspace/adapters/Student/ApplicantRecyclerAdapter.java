@@ -39,7 +39,7 @@ public class ApplicantRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     public ApplicantRecyclerAdapter(Context context, List<User> users,
                                     ApplicantClickListener itemListener, String postId) {
         this.mContext = context;
-        this.itemListener = itemListener;
+        ApplicantRecyclerAdapter.itemListener = itemListener;
         this.users = users;
         this.postId = postId;
     }
@@ -61,27 +61,27 @@ public class ApplicantRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         User user = users.get(position);
 //        DatabaseReference postRef = mApplicantRef.child(postId)
-        TutorViewHolder pHolder = (TutorViewHolder) holder;
+        TutorViewHolder uHolder = (TutorViewHolder) holder;
 
         //Update data in TutorViewHolder
-        pHolder.name.setText(user.getFullName());
+        uHolder.name.setText(user.getFullName());
         if(user.getRating()!=null){
-            pHolder.rating.setText(user.getRating());
+            uHolder.rating.setText(user.getRating());
         }
-        pHolder.note.setText(user.getUsername());
+        uHolder.note.setText(user.getUsername());
         if(user.getRate()!=null){
-            pHolder.rate.setText(user.getRate());
+            uHolder.rate.setText(user.getRate());
         }
         else{
-            pHolder.rate.setText(R.string.not_set);
+            uHolder.rate.setText(R.string.not_set);
         }
         if(user.isAccepted()){
-            pHolder.cardView
+            uHolder.cardView
                     .setCardBackgroundColor(mContext.getResources().getColor(R.color.md_teal_100));
         }
 
 
-        final TutorViewHolder mViewHolder = pHolder;
+        final TutorViewHolder mViewHolder = uHolder;
 
         if (user.getProfilePicLocation() != null){
 
@@ -98,13 +98,13 @@ public class ApplicantRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         }
 
         if(itemListener != null) {
-            pHolder.viewLayout.setOnClickListener(new View.OnClickListener() {
+            uHolder.viewLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     itemListener.messageClick(v, mViewHolder.getLayoutPosition());
                 }
             });
-            pHolder.viewLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            uHolder.viewLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     itemListener.acceptClick(v, mViewHolder.getLayoutPosition());
@@ -113,10 +113,10 @@ public class ApplicantRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     return true;
                 }
             });
-            pHolder.profilePic.setOnClickListener(new View.OnClickListener(){
+            uHolder.profilePic.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    itemListener.userDetailsClick(v, mViewHolder.getLayoutPosition());
+                    itemListener.userDetailsClick(mViewHolder.cardView, mViewHolder.getLayoutPosition());
                 }
             });
         }
@@ -141,13 +141,13 @@ public class ApplicantRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         TutorViewHolder(View view) {
             super(view);
-            viewLayout = view.findViewById(R.id.item_post);
+            viewLayout = view.findViewById(R.id.linear_layout_post_details);
             cardView = view.findViewById(R.id.card_view_item_tutor);
-            profilePic = view.findViewById(R.id.iv_post_item);
-            name = view.findViewById(R.id.tutor_name);
-            rating = view.findViewById(R.id.tutor_rating);
-            note = view.findViewById(R.id.tutor_note);
-            rate = view.findViewById(R.id.suggested_rate_value);
+            profilePic = view.findViewById(R.id.iv_tutor);
+            name = view.findViewById(R.id.text_name);
+            rating = view.findViewById(R.id.text_rating);
+            note = view.findViewById(R.id.text_note);
+            rate = view.findViewById(R.id.text_rate);
 
 
 

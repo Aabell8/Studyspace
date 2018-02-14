@@ -44,7 +44,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
     private View inflatedPosts;
     private RecyclerView mRecyclerView;
-    private ArrayList<Post> posts;
+    private ArrayList<Post> mPosts;
     private PostRecyclerAdapter mPostRecyclerAdapter;
     private LinearLayoutManager llm;
     private FloatingActionButton mFab;
@@ -74,7 +74,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mPostRef = mRootRef.child("posts");
 
-        mRecyclerView = inflatedPosts.findViewById(R.id.rvPosts);
+        mRecyclerView = inflatedPosts.findViewById(R.id.rv_posts);
 
         mRecyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity());
@@ -84,7 +84,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.addItemDecoration(dividerItemDecoration);
         mRecyclerView.setLayoutManager(llm);
 
-        posts = new ArrayList<>();
+        mPosts = new ArrayList<>();
 
         mRecyclerViewClickListener = new RecyclerViewClickListener() {
             @Override
@@ -92,7 +92,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                 if (position != -1){
                     //Retrieve Id from item clicked, and pass it into an intent
                     Intent intent = new Intent(v.getContext(), ApplicantListActivity.class);
-                    intent.putExtra("post_id", posts.get(position).getPid());
+                    intent.putExtra("post_id", mPosts.get(position).getPid());
                     startActivity(intent);
                 }
             }
@@ -101,7 +101,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
             }
         };
 
-        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
+        mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), mPosts, mRecyclerViewClickListener);
         mRecyclerView.setAdapter(mPostRecyclerAdapter);
         setSwipeForRecyclerView();
 
@@ -149,7 +149,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        mFab = getActivity().findViewById(R.id.fab);
+        mFab = inflatedPosts.findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 CreatePost();
@@ -184,7 +184,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                 PostRecyclerAdapter adapter = (PostRecyclerAdapter) mRecyclerView.getAdapter();
                 adapter.remove(swipedPosition);
                 //noinspection ConstantConditions
-                mSnackbar = Snackbar.make(getActivity().findViewById(R.id.student_fragment_coordinator_layout),
+                mSnackbar = Snackbar.make(getActivity().findViewById(R.id.coordinator_layout_student_fragment),
                         mPostRecyclerAdapter.removedCount() + " items removed",
                         Snackbar.LENGTH_LONG);
                 mSnackbar.setAction("Undo", new View.OnClickListener(){
@@ -246,8 +246,8 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
 //    private void getAllPosts(DataSnapshot dataSnapshot){
 //        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
 //            Post nPost = singleSnapshot.getValue(Post.class);
-//            posts.add(nPost);
-//            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), posts, mRecyclerViewClickListener);
+//            mPosts.add(nPost);
+//            mPostRecyclerAdapter = new PostRecyclerAdapter(getContext(), mPosts, mRecyclerViewClickListener);
 //            mRecyclerView.setAdapter(mPostRecyclerAdapter);
 //        }
 //    }
@@ -257,11 +257,10 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         tQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                posts.clear();
-                Log.e("Count " ,""+snapshot.getChildrenCount());
+                mPosts.clear();
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     Post nPost = postSnapshot.getValue(Post.class);
-                    posts.add(nPost);
+                    mPosts.add(nPost);
                     (mRecyclerView.getAdapter()).notifyDataSetChanged();
                 }
             }

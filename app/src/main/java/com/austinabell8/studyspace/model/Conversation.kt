@@ -8,11 +8,9 @@ import android.os.Parcelable
  */
 data class Conversation(val conversationId: String? = "",
                         val from: String? = "",
-                        val preview:String? = "",
-                        val photoUrl:String? = "") : Parcelable {
+                        val preview:String? = "") : Parcelable {
 
     constructor(parcel: Parcel?) : this(
-            parcel?.readString(),
             parcel?.readString(),
             parcel?.readString(),
             parcel?.readString()
@@ -23,7 +21,6 @@ data class Conversation(val conversationId: String? = "",
         parcel.writeString(conversationId)
         parcel.writeString(from)
         parcel.writeString(preview)
-        parcel.writeString(photoUrl)
     }
 
     override fun describeContents(): Int {

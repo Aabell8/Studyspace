@@ -7,17 +7,16 @@
     android:paddingLeft="8dip"
     android:paddingRight="8dip" >
     <FrameLayout
-        android:id="@+id/avatarFrame"
+        android:id="@+id/frame_profile_pic"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageView
-            android:id="@+id/avatarView"
+            android:id="@+id/image_profile_pic"
             android:layout_marginEnd="12dp"
             android:layout_marginStart="8dp"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:layout_centerVertical="true"
             android:scaleType="fitXY"
             android:importantForAccessibility="no"
             android:contentDescription="@null" />
@@ -25,7 +24,7 @@
             android:id="@+id/conversation_failed_status_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
             android:visibility="gone"
             android:importantForAccessibility="no"
             android:contentDescription="@null"/>
@@ -33,7 +32,7 @@
     <LinearLayout
         android:layout_centerVertical="true"
         android:orientation="vertical"
-        android:layout_toRightOf="@id/avatarFrame"
+        android:layout_toEndOf="@id/frame_profile_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
         <RelativeLayout
@@ -47,7 +46,7 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center_vertical"
                 android:background="@android:color/transparent">
-                <TextView android:id="@+id/from"
+                <TextView android:id="@+id/text_from"
                     android:layout_marginEnd="5dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -57,7 +56,7 @@
                     android:textSize="18sp"
                     android:textColor="@color/md_grey_600"
                     android:ellipsize="marquee"  />
-                <TextView android:id="@+id/date"
+                <TextView android:id="@+id/text_date"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="5dp"
                     android:layout_gravity="right"
@@ -70,39 +69,14 @@
                     android:textColor="@color/md_grey_600" />
             </LinearLayout>
         </RelativeLayout>
-        <TextView android:id="@+id/snippet"
+        <TextView android:id="@+id/text_preview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmallInverse"
             android:maxLines="2"
             android:textSize="13sp"
             android:layout_marginBottom="5dip"
-            android:layout_alignParentBottom="true"
             android:textColor="@color/md_grey_400"
             android:ellipsize="end" />
-        <!--<LinearLayout android:id="@+id/errorBlock"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:visibility="gone"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content" >-->
-            <!--<TextView android:id="@+id/errorSnippet"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmallInverse"-->
-                <!--android:maxLines="1"-->
-                <!--android:textSize="13sp"-->
-                <!--android:textColor="@color/widget_text_color"-->
-                <!--android:ellipsize="end" />-->
-            <!--<TextView android:id="@+id/errorText"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmallInverse"-->
-                <!--android:maxLines="2"-->
-                <!--android:textSize="13sp"-->
-                <!--android:layout_marginBottom="5dip"-->
-                <!--android:textColor="@color/conversation_list_error"-->
-                <!--android:ellipsize="end" />-->
-        <!--</LinearLayout>-->
     </LinearLayout>
 </RelativeLayout>

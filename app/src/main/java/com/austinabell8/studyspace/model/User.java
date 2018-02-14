@@ -1,8 +1,12 @@
 package com.austinabell8.studyspace.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
 import java.util.Map;
 
-public class User {
+public class User implements Parcelable {
 
     private String username;
     private String email;
@@ -12,7 +16,6 @@ public class User {
     private String profilePicLocation;
     private String rating;
     private String rate;
-    private Map<String, Object> posts;
     private boolean accepted;
     private String uid;
 
@@ -80,14 +83,6 @@ public class User {
         this.rating = rating;
     }
 
-    public Map<String, Object> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Map<String, Object> posts) {
-        this.posts = posts;
-    }
-
     public String getRate() {
         return rate;
     }
@@ -111,4 +106,72 @@ public class User {
     public void setUid(String uid) {
         this.uid = uid;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    // write your object's data to the passed-in Parcel
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(username);
+        out.writeString(email);
+        out.writeString(role);
+        out.writeString(fullName);
+        out.writeString(age);
+        out.writeString(profilePicLocation);
+        out.writeString(rating);
+        out.writeString(rate);
+        out.writeString(uid);
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    // example constructor that takes a Parcel and gives you an object populated with it's values
+    private User(Parcel in) {
+        username = in.readString();
+        email = in.readString();
+        role = in.readString();
+        fullName = in.readString();
+        age = in.readString();
+        profilePicLocation = in.readString();
+        rating = in.readString();
+        rate = in.readString();
+        uid = in.readString();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof User)) {
+            return false;
+        }
+        User that = (User) other;
+        // Custom equality check here.
+
+        return this.username.equals(that.getUsername());
+    }
+
+//    @Override
+//    public int hashCode() {
+//        int hashCode = 1;
+//
+//        hashCode = hashCode * 37 + this.username.hashCode();
+//        hashCode = hashCode * 37 + this.email.hashCode();
+//        hashCode = hashCode * 37 + this.role.hashCode();
+//        hashCode = hashCode * 37 + this.fullName.hashCode();
+//        hashCode = hashCode * 37 + this.price.hashCode();
+//        hashCode = hashCode * 37 + this.status.hashCode();
+//        hashCode = hashCode * 37 + this.uid.hashCode();
+//
+//        return hashCode;
+//    }
 }

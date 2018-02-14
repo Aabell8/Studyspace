@@ -39,6 +39,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,6 +50,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = "LoginActivity";
 
     private LoginButton FBLoginButton;
 
@@ -66,9 +69,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private SharedPreferences mPreferences;
 
-    private static final String TAG = "SS.LoginActivity";
-//    private static final int RC_SIGN_IN = 123;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,19 +82,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         FirebaseApp.initializeApp(this);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
-//        if (isLoggedIn()){
-//            completeIntent();
-//        }
-
 
         setContentView(R.layout.activity_login);
-        FBLoginButton = findViewById(R.id.facebook_login_button);
-        mLoginBtn = findViewById(R.id.login_button);
+        FBLoginButton = findViewById(R.id.button_facebook_login);
+        mLoginBtn = findViewById(R.id.button_login);
         mLoginBtn.setOnClickListener(this);
-        mSignupButton = findViewById(R.id.signup_link);
+        mSignupButton = findViewById(R.id.text_sign_up);
         mSignupButton.setOnClickListener(this);
-        mEmail = findViewById(R.id.input_email);
-        mPassword = findViewById(R.id.input_password);
+        mEmail = findViewById(R.id.edit_text_email);
+        mPassword = findViewById(R.id.edit_text_password);
         mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -122,18 +118,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 progressDialog.setMessage(getString(R.string.authenticating));
                 progressDialog.setCancelable(false);
                 progressDialog.show();
-
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
-
+                Log.e(TAG, "fb login cancelled");
             }
-
             @Override
             public void onError(FacebookException exception) {
-
+                Log.e(TAG, "fb login failed");
             }
         });
 
@@ -147,23 +141,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     // User is signed out
                     Log.d(TAG, "Austin8onAuthStateChanged:signed_out");
                 }
-
             }
         };
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.login_button:
-                if (!mEmail.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()){
-
-                    progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
+            case R.id.button_login:
+                if (!mEmail.getText().toString().isEmpty()
+                        && !mPassword.getText().toString().isEmpty()){
+                    progressDialog =
+                            new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
                     progressDialog.setMessage(getString(R.string.authenticating));
                     progressDialog.setCancelable(false);
                     progressDialog.show();
@@ -188,13 +177,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                 Toast.LENGTH_SHORT).show();
                                         progressDialog.hide();
                                     }
-
                                 }
                             });
                 }
-
                 break;
-            case R.id.signup_link:
+            case R.id.text_sign_up:
                 Intent intent = new Intent (LoginActivity.this, RegisterActivity.class);
                 intent.putExtra("facebook", false);
                 startActivity(intent);
@@ -259,12 +246,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-//    public boolean isLoggedIn() {
-//        return mFirebaseAuth.getCurrentUser() != null;
-////        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-////        return accessToken != null;
-//    }
-
     private void completeIntent() {
         DatabaseReference ref = mRootRef.child("users")
                 .child(mFirebaseAuth.getCurrentUser().getUid()).child("role");
@@ -290,11 +271,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         startActivity(intent);
                         break;
                 }
+
                 finish();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Studyspace", "Database error when retrieving role");
+                Log.e(TAG, "Database error when retrieving role");
             }
         });
     }
@@ -361,7 +343,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Studyspace", "Database error when retrieving role");
+                Log.e(TAG, "Database error when retrieving role");
             }
         });
     }

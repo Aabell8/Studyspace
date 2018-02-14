@@ -5,5 +5,5 @@
         android:gravity="center"
         android:viewportHeight="108"
         android:viewportWidth="108"
-        android:drawable="@drawable/book"/>
+        android:drawable="@drawable/pmc_logo"/>
 </layer-list>

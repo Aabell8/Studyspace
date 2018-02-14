@@ -2,9 +2,6 @@ package com.austinabell8.studyspace.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +11,12 @@ import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.model.Message;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,25 +62,38 @@ public class MessageListAdapter extends BaseAdapter {
 
         if (message.getSenderId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             convertView = messageInflater.inflate(R.layout.item_message_sent, null);
-            holder.messageBody = convertView.findViewById(R.id.message_body);
+            holder.messageBody = convertView.findViewById(R.id.text_message_body);
             convertView.setTag(holder);
             holder.messageBody.setText(message.getText());
         } else {
             convertView = messageInflater.inflate(R.layout.item_message_received, null);
-            holder.avatar = convertView.findViewById(R.id.avatar);
-            holder.name = convertView.findViewById(R.id.name);
-            holder.messageBody = convertView.findViewById(R.id.message_body);
+            holder.profileImage = convertView.findViewById(R.id.iv_profile_pic);
+//            holder.name = convertView.findViewById(R.id.name);
+            holder.messageBody = convertView.findViewById(R.id.text_message_body);
             convertView.setTag(holder);
 
-            holder.name.setText(message.getName());
+//            holder.name.setText(message.getName());
             holder.messageBody.setText(message.getText());
+
+            final MessageViewHolder mViewHolder = holder;
+//            StorageReference storageRef = FirebaseStorage.getInstance()
+//                    .getReference().child("/Photos/profile_picture/2odB6ZaCrZU507gmpzvATc7Hmlt1/54a90d3d-2503-4443-a6ea-55dc861bc661/profile_pic");
+//            //TODO: Get specific profile pic
+//            storageRef.getBytes(2048*2048).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                @Override
+//                public void onSuccess(byte[] bytes) {
+//                    Glide.with(context)
+//                            .load(bytes)
+//                            .into(mViewHolder.profileImage);
+//                }
+//            });
         }
 
         return convertView;
     }
 
     class MessageViewHolder {
-        public View avatar;
+        public ImageView profileImage;
         public TextView name;
         public TextView messageBody;
     }

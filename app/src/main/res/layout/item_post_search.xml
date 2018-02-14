@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="85dp"
     android:weightSum="4"
-    android:id="@+id/item_post"
+    android:id="@+id/linear_layout_post_details"
     android:paddingBottom="10dp"
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
@@ -14,7 +14,7 @@
     android:background="?android:attr/selectableItemBackground">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/imageCard"
+        android:id="@+id/card_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center_vertical"
@@ -26,7 +26,7 @@
         app:cardCornerRadius="30dp">
 
         <ImageView
-            android:id="@+id/iv_post_item"
+            android:id="@+id/image_post"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/com_facebook_profile_picture_blank_portrait"
@@ -41,21 +41,21 @@
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
-        <TextView android:id="@+id/post_name"
+        <TextView android:id="@+id/text_name"
             android:textSize="16sp"
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <TextView android:id="@+id/post_course"
+        <TextView android:id="@+id/text_course"
             android:textSize="16sp"
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <TextView android:id="@+id/post_description"
+        <TextView android:id="@+id/text_description"
             android:textSize="16sp"
             android:maxLines="1"
             android:ellipsize="end"
@@ -72,7 +72,7 @@
         android:layout_weight="1.5"
         android:orientation="vertical">
 
-        <TextView android:id="@+id/post_price"
+        <TextView android:id="@+id/text_price"
             android:layout_marginBottom="5dp"
             android:textSize="16sp"
             android:maxLines="1"
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"/>
 
         <Button
-            android:id="@+id/btn_apply"
+            android:id="@+id/button_apply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/apply"

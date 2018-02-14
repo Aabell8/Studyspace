@@ -14,6 +14,8 @@ import com.austinabell8.studyspace.R;
 
 public class PostSearchInputActivity extends AppCompatActivity {
 
+    private static final String TAG = "PostSearchInputActivity";
+
     private EditText mPriceText;
     private Button mSearchButton;
     private Spinner mCourseSpinner;
@@ -33,9 +35,9 @@ public class PostSearchInputActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Search Posts");
         }
 
-        mCourseSpinner = findViewById(R.id.course_spinner);
-        mSearchButton = findViewById(R.id.search_button);
-        mSearchText = findViewById(R.id.search_text);
+        mCourseSpinner = findViewById(R.id.spinner_course);
+        mSearchButton = findViewById(R.id.button_search);
+        mSearchText = findViewById(R.id.edit_text_search);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.subject_arrays));

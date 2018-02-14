@@ -3,6 +3,7 @@ package com.austinabell8.studyspace.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.austinabell8.studyspace.activities.Student.StudentActivity;
 import com.austinabell8.studyspace.activities.Tutor.TutorActivity;
@@ -21,6 +22,8 @@ import com.google.firebase.database.ValueEventListener;
  */
 
 public class SplashActivity extends AppCompatActivity {
+
+    private static final String TAG = "SplashActivity";
 
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mRootRef;
@@ -69,6 +72,7 @@ public class SplashActivity extends AppCompatActivity {
                 public void onCancelled(DatabaseError databaseError) {
                     Intent intent = new Intent(getParent(), LoginActivity.class);
                     startActivity(intent);
+                    Log.e(TAG, "Failed to query logging in user");
                     finish();
                 }
             });

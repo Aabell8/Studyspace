@@ -47,6 +47,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
+    private static final String TAG = "ProfileFragment";
+
     private ProfileFragment.OnFragmentInteractionListener mListener;
     private View inflatedProfile;
     private Button mLogoutButton;
@@ -87,13 +89,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         openImageSelector();
         initializeUserInfo();
 
-        mLogoutButton = inflatedProfile.findViewById(R.id.log_out_button);
+        mLogoutButton = inflatedProfile.findViewById(R.id.button_log_out);
         mLogoutButton.setOnClickListener(this);
-        mNameText = inflatedProfile.findViewById(R.id.name_text);
-        mUsernameText = inflatedProfile.findViewById(R.id.username_text);
-        mEmailText = inflatedProfile.findViewById(R.id.email_text);
+        mNameText = inflatedProfile.findViewById(R.id.text_name);
+        mUsernameText = inflatedProfile.findViewById(R.id.text_username);
+        mEmailText = inflatedProfile.findViewById(R.id.text_email);
 
-        mImageView = inflatedProfile.findViewById(R.id.profilePicture);
+        mImageView = inflatedProfile.findViewById(R.id.image_profile_pic);
         Glide.with(getApplicationContext())
                 .load(R.drawable.com_facebook_profile_picture_blank_portrait)
                 .into(mImageView);
@@ -142,7 +144,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.log_out_button:
+            case R.id.button_log_out:
                 LoginManager.getInstance().logOut();
                 FirebaseAuth.getInstance().signOut();
                 break;
@@ -151,7 +153,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     public void openImageSelector(){
 
-        mPhotoPickerButton = inflatedProfile.findViewById(R.id.imageButton);
+        mPhotoPickerButton = inflatedProfile.findViewById(R.id.button_upload);
         mPhotoPickerButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -167,7 +169,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, final Intent data){
 
         mStorage = FirebaseStorage.getInstance().getReference(); //make global
-        final ImageView imageView = inflatedProfile.findViewById(R.id.profilePicture);
+        final ImageView imageView = inflatedProfile.findViewById(R.id.image_profile_pic);
         super.onActivityResult(requestCode, requestCode, data);
 
         if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
@@ -223,7 +225,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 
     private void initializeUserInfo(){
-        final ImageView imageView = inflatedProfile.findViewById(R.id.profilePicture);
+        final ImageView imageView = inflatedProfile.findViewById(R.id.image_profile_pic);
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         currentUserId = mFirebaseAuth.getCurrentUser().getUid();
@@ -253,7 +255,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
                     }
                 }catch (Exception e){
-                    Log.e("Err", "glide");
+                    Log.e(TAG, "glide");
                 }
 
             }
@@ -266,11 +268,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         mCurrentUserDatabaseReference
                 .addValueEventListener(mValueListener);
-    }
-
-    private void updateImage(){
-        final ImageView imageView = inflatedProfile.findViewById(R.id.profilePicture);
-
     }
 
     public interface OnFragmentInteractionListener {
@@ -300,7 +297,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o2);
     }
 
-    public static Bitmap getThumbnail(Uri uri, ProfileFragment fragment) throws FileNotFoundException, IOException {
+    public static Bitmap getThumbnail(Uri uri, ProfileFragment fragment) throws IOException {
         InputStream input = fragment.getContext().getContentResolver().openInputStream(uri);
 
         BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();

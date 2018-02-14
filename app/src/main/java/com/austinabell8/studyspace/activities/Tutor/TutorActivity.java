@@ -38,6 +38,8 @@ public class TutorActivity extends AppCompatActivity
         ProfileFragment.OnFragmentInteractionListener,
         View.OnClickListener {
 
+    private static final String TAG = "TutorActivity";
+
     private TPostsFragment mTPostsFragment;
     private MessagesFragment mMessagesFragment;
     private ProfileFragment mProfileFragment;
@@ -227,7 +229,7 @@ public class TutorActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.log_out_button:
+            case R.id.button_log_out:
                 logout();
                 break;
         }

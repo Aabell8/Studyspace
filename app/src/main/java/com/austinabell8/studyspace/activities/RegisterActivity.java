@@ -23,13 +23,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
+
     private static final String TAG = "RegisterActivity";
 
     private Button mSignupButton;
@@ -63,31 +64,29 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        String fb = getIntent().getStringExtra("facebook");
-
         mFirebaseAuth = FirebaseAuth.getInstance();
         mPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
         mDatabase = FirebaseDatabase.getInstance();
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
-        mSignupButton = findViewById(R.id.signup_button);
+        mSignupButton = findViewById(R.id.button_sign_up);
         mSignupButton.setOnClickListener(this);
-        mLoginButton = findViewById(R.id.login_link);
+        mLoginButton = findViewById(R.id.text_login_link);
         mLoginButton.setOnClickListener(this);
-        mNameText = findViewById(R.id.input_name);
-        mUsernameText = findViewById(R.id.input_username);
-        mAgeText = findViewById(R.id.input_age);
-        mPasswordText = findViewById(R.id.input_password);
-        mRePasswordText = findViewById(R.id.input_reEnterPassword);
-        mEmailText = findViewById(R.id.input_email);
+        mNameText = findViewById(R.id.edit_text_name);
+        mUsernameText = findViewById(R.id.edit_text_username);
+        mAgeText = findViewById(R.id.edit_text_age);
+        mPasswordText = findViewById(R.id.edit_text_password);
+        mRePasswordText = findViewById(R.id.edit_text_re_password);
+        mEmailText = findViewById(R.id.edit_text_email);
 
-        mSpinner = findViewById(R.id.course_spinner);
+        mSpinner = findViewById(R.id.spinner_course);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(RegisterActivity.this,
                 R.layout.register_spinner_item, getResources().getStringArray(R.array.referred_array));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
-        mOtherTil = findViewById(R.id.tilOther);
+        mOtherTil = findViewById(R.id.til_other);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -120,27 +119,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 else{
                     mEmailText.setVisibility(View.GONE);
                 }
-                //String birthday = data.getString("birthday");
             }
-
         }
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.signup_button:
+            case R.id.button_sign_up:
                 signup();
                 break;
-            case R.id.login_link:
+            case R.id.text_login_link:
                 Intent intent = new Intent (RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 break;
         }
     }
-
 
     public void signup() {
         Log.d(TAG, "Signup");
@@ -164,9 +159,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             final String age = mAgeText.getText().toString().trim();
             final String uid = mFirebaseAuth.getCurrentUser().getUid();
 
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(name).build();
+            user.updateProfile(profileUpdates);
+
             progressDialog.hide();
             DatabaseReference usersRef = mRootRef.child("users");
-            usersRef.child(uid).setValue(new User(username, "facebook", name, age));
+            usersRef.child(uid).setValue(new User(username, "None", name, age));
             onSignupSuccess();
         }
         else {
@@ -181,6 +181,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 final String age = mAgeText.getText().toString().trim();
                                 final String email = mEmailText.getText().toString().trim();
                                 final String uid = mFirebaseAuth.getCurrentUser().getUid();
+
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(name).build();
+                                user.updateProfile(profileUpdates);
+
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
                                 SharedPreferences.Editor prefEditor = mPreferences.edit();
@@ -205,7 +211,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-
     public void onSignupSuccess() {
         mSignupButton.setEnabled(true);
         setResult(RESULT_OK, null);
@@ -224,17 +229,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public boolean validate() {
         boolean valid = true;
 
-        mNameTil = findViewById(R.id.tilName);
+        mNameTil = findViewById(R.id.til_ame);
         mNameTil.setErrorEnabled(true);
-        mEmailTil = findViewById(R.id.tilEmail);
+        mEmailTil = findViewById(R.id.til_email);
         mEmailTil.setErrorEnabled(true);
-        mUsernameTil = findViewById(R.id.tilUsername);
+        mUsernameTil = findViewById(R.id.til_username);
         mUsernameTil.setErrorEnabled(true);
-        mAgeTil = findViewById(R.id.tilAge);
+        mAgeTil = findViewById(R.id.til_age);
         mAgeTil.setErrorEnabled(true);
-        mPasswordTil = findViewById(R.id.tilPassword);
+        mPasswordTil = findViewById(R.id.til_password);
         mPasswordTil.setErrorEnabled(true);
-        mRePasswordTil = findViewById(R.id.tilRePassword);
+        mRePasswordTil = findViewById(R.id.til_re_password);
         mRePasswordTil.setErrorEnabled(true);
 
         String name = mNameText.getText().toString().trim();

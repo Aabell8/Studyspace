@@ -36,6 +36,8 @@ public class StudentActivity extends AppCompatActivity
         ProfileFragment.OnFragmentInteractionListener,
         View.OnClickListener {
 
+    private static final String TAG = "StudentActivity";
+
     private PostsFragment mPostsFragment;
     private MessagesFragment mMessagesFragment;
     private ProfileFragment mProfileFragment;
@@ -62,6 +64,7 @@ public class StudentActivity extends AppCompatActivity
         if (getSupportActionBar()!=null){
             getSupportActionBar().setTitle("Posts");
         }
+
 
         initView();
 
@@ -231,7 +234,7 @@ public class StudentActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.log_out_button:
+            case R.id.button_log_out:
                 logout();
                 break;
         }

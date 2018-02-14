@@ -33,7 +33,7 @@ public class PostApplicationsRecyclerAdapter extends RecyclerView.Adapter<Recycl
     public PostApplicationsRecyclerAdapter(Context context, List<Post> posts,
                                            RecyclerViewClickListener itemListener){
         this.mContext = context;
-        this.itemListener = itemListener;
+        PostApplicationsRecyclerAdapter.itemListener = itemListener;
         this.posts = posts;
         mRemovedPosts = new ArrayList<>();
     }
@@ -48,17 +48,17 @@ public class PostApplicationsRecyclerAdapter extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostViewHolder){
-            final Post q = posts.get(position);
+            final Post p = posts.get(position);
             PostViewHolder qHolder = (PostViewHolder) holder;
 
-            if (q!=null) {
+            if (p!=null) {
                 qHolder.regularLayout.setVisibility(View.VISIBLE);
 
-                qHolder.name.setText(q.getName());
-                qHolder.tag.setText(q.getCourse());
-                qHolder.dateId.setText(q.getDescription());
-                qHolder.price.setText(q.getPrice());
-                qHolder.status.setText(q.getStatus());
+                qHolder.name.setText(p.getName());
+                qHolder.course.setText(p.getCourse());
+                qHolder.description.setText(p.getDescription());
+                qHolder.price.setText(p.getPrice());
+                qHolder.status.setText(p.getStatus());
 
                 final PostViewHolder mViewHolder = qHolder;
                 if(itemListener != null){
@@ -83,9 +83,9 @@ public class PostApplicationsRecyclerAdapter extends RecyclerView.Adapter<Recycl
             }
         }
         if (holder instanceof DividerViewHolder){
-            Post q = posts.get(position);
+            Post p = posts.get(position);
             DividerViewHolder dHolder = (DividerViewHolder) holder;
-            dHolder.name.setText(q.getName());
+            dHolder.name.setText(p.getName());
         }
 
     }
@@ -132,19 +132,19 @@ public class PostApplicationsRecyclerAdapter extends RecyclerView.Adapter<Recycl
         public LinearLayout regularLayout;
 
         public TextView name;
-        public TextView tag;
-        public TextView dateId;
+        public TextView course;
+        public TextView description;
         public TextView price;
         public TextView status;
 
         public PostViewHolder(View view) {
             super(view);
-            regularLayout = view.findViewById(R.id.item_post);
-            name = view.findViewById(R.id.post_name);
-            tag = view.findViewById(R.id.post_tag);
-            dateId = view.findViewById(R.id.post_date_id);
-            price = view.findViewById(R.id.post_price);
-            status = view.findViewById(R.id.post_status);
+            regularLayout = view.findViewById(R.id.linear_layout_post_details);
+            name = view.findViewById(R.id.text_name);
+            course = view.findViewById(R.id.text_course);
+            description = view.findViewById(R.id.text_description);
+            price = view.findViewById(R.id.text_price);
+            status = view.findViewById(R.id.text_status);
 
         }
 

@@ -5,7 +5,7 @@
     tools:context="com.austinabell8.studyspace.fragments.MessagesFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvConversations"
+        android:id="@+id/rv_conversations"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical" />

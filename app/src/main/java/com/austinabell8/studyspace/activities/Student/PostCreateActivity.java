@@ -23,6 +23,8 @@ import java.text.NumberFormat;
 
 public class PostCreateActivity extends AppCompatActivity {
 
+    private static final String TAG = "PostCreateActivity";
+
     private EditText mPriceText;
     private Button mCreateButton;
     private SearchableSpinner mCourseSpinner;
@@ -45,10 +47,10 @@ public class PostCreateActivity extends AppCompatActivity {
 
         current = "";
 
-        mPriceText = findViewById(R.id.price_edit_text);
+        mPriceText = findViewById(R.id.edit_text_price);
         mPriceText.setRawInputType(Configuration.KEYBOARD_12KEY);
         mPriceText.addTextChangedListener(new TextWatcher(){
-            DecimalFormat dec = new DecimalFormat("0.00");
+//            DecimalFormat dec = new DecimalFormat("0.00");
             @Override
             public void afterTextChanged(Editable arg0) {
             }
@@ -75,9 +77,9 @@ public class PostCreateActivity extends AppCompatActivity {
             }
         });
 //        mPriceText.addTextChangedListener(new NumberTextWatcher(mPriceText, "#,###"));
-        mCourseSpinner = findViewById(R.id.course_spinner);
-        mCreateButton = findViewById(R.id.create_button);
-        mDescriptionText = findViewById(R.id.description_edit_text);
+        mCourseSpinner = findViewById(R.id.spinner_course);
+        mCreateButton = findViewById(R.id.button_create);
+        mDescriptionText = findViewById(R.id.edit_text_description);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(PostCreateActivity.this,
                 android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.subject_arrays));
@@ -111,45 +113,5 @@ public class PostCreateActivity extends AppCompatActivity {
         return false;
     }
 
-
-    public boolean validate() {
-//        boolean valid = true;
-//
-//        String name = mNameText.getText().toString().trim();
-//        String username = mUsernameText.getText().toString().trim();
-//        String email = mEmailText.getText().toString().trim();
-//        String password = mPasswordText.getText().toString().trim();
-//
-//        if (name.isEmpty() || name.length() < 3) {
-//            mNameText.setError("must be at least 3 characters");
-//            valid = false;
-//        } else {
-//            mNameText.setError(null);
-//        }
-//
-//        if (username.isEmpty() || username.length() < 5) {
-//            mUsernameText.setError("must be at least 5 characters");
-//            valid = false;
-//        } else {
-//            mNameText.setError(null);
-//        }
-//
-//        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-//            mAgeText.setError("enter a valid email address");
-//            valid = false;
-//        } else {
-//            mAgeText.setError(null);
-//        }
-//
-//        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-//            mPasswordText.setError("between 4 and 10 alphanumeric characters");
-//            valid = false;
-//        } else {
-//            mPasswordText.setError(null);
-//        }
-//
-//        return valid;
-        return true;
-    }
 
 }

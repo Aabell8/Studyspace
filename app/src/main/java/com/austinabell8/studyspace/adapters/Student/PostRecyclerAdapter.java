@@ -1,7 +1,6 @@
 package com.austinabell8.studyspace.adapters.Student;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +11,11 @@ import android.widget.TextView;
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.utils.RecyclerViewClickListener;
 import com.austinabell8.studyspace.model.Post;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by aabell on 7/18/2017.
@@ -40,7 +32,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public PostRecyclerAdapter(Context context, List<Post> posts,
                                RecyclerViewClickListener itemListener){
         this.mContext = context;
-        this.itemListener = itemListener;
+        PostRecyclerAdapter.itemListener = itemListener;
         this.posts = posts;
         mRemovedPosts = new ArrayList<>();
     }
@@ -55,17 +47,17 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostViewHolder){
-            final Post q = posts.get(position);
+            final Post p = posts.get(position);
             PostViewHolder qHolder = (PostViewHolder) holder;
 
-            if (q!=null) {
+            if (p!=null) {
                 qHolder.regularLayout.setVisibility(View.VISIBLE);
 
-                qHolder.name.setText(q.getName());
-                qHolder.tag.setText(q.getCourse());
-                qHolder.dateId.setText(q.getDescription());
-                qHolder.price.setText(q.getPrice());
-                qHolder.status.setText(q.getStatus());
+                qHolder.name.setText(p.getName());
+                qHolder.course.setText(p.getCourse());
+                qHolder.description.setText(p.getDescription());
+                qHolder.price.setText(p.getPrice());
+                qHolder.status.setText(p.getStatus());
 
                 final PostViewHolder mViewHolder = qHolder;
                 if(itemListener != null){
@@ -90,9 +82,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
         if (holder instanceof DividerViewHolder){
-            Post q = posts.get(position);
+            Post p = posts.get(position);
             DividerViewHolder dHolder = (DividerViewHolder) holder;
-            dHolder.name.setText(q.getName());
+            dHolder.name.setText(p.getName());
         }
 
     }
@@ -141,19 +133,19 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public LinearLayout regularLayout;
 
         public TextView name;
-        public TextView tag;
-        public TextView dateId;
+        public TextView course;
+        public TextView description;
         public TextView price;
         public TextView status;
 
         public PostViewHolder(View view) {
             super(view);
-            regularLayout = view.findViewById(R.id.item_post);
-            name = view.findViewById(R.id.post_name);
-            tag = view.findViewById(R.id.post_tag);
-            dateId = view.findViewById(R.id.post_date_id);
-            price = view.findViewById(R.id.post_price);
-            status = view.findViewById(R.id.post_status);
+            regularLayout = view.findViewById(R.id.linear_layout_post_details);
+            name = view.findViewById(R.id.text_name);
+            course = view.findViewById(R.id.text_course);
+            description = view.findViewById(R.id.text_description);
+            price = view.findViewById(R.id.text_price);
+            status = view.findViewById(R.id.text_status);
 
         }
 

@@ -1,6 +1,10 @@
 package com.austinabell8.studyspace.activities.Tutor;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.adapters.Tutor.PostSearchRecyclerAdapter;
@@ -29,6 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
+
+    private static final String TAG = "SearchActivity";
 
     private RecyclerView mRecyclerView;
     private ArrayList<Post> posts;
@@ -54,10 +61,10 @@ public class SearchActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Posts");
         }
 
-        mRecyclerView = findViewById(R.id.rvPosts);
+        mRecyclerView = findViewById(R.id.rv_search);
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mPostRef = mRootRef.child("posts");
-        mSpinner = findViewById(R.id.progressBarSearch);
+        mSpinner = findViewById(R.id.progress_bar_search);
 
         Bundle data = getIntent().getExtras();
         String course = data.getString("course");
@@ -76,7 +83,28 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerViewClickListener = new SearchPostClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
-                //TODO: Intent to post details activity
+                if (position != -1){
+                    //Retrieve Id from item clicked, and pass it into an intent
+                    Intent intent = new Intent(v.getContext(), PostDetailsActivity.class);
+                    intent.putExtra("post_intent", posts.get(position));
+                    TextView placeName = v.findViewById(R.id.text_name);
+                    TextView placeCourse = v.findViewById(R.id.text_course);
+                    TextView placePrice = v.findViewById(R.id.text_price);
+
+                    Pair<View,String> namePair = Pair.create((View)placeName, "tName");
+                    Pair<View,String> coursePair = Pair.create((View)placeCourse, "tCourse");
+                    Pair<View,String> pricePair = Pair.create((View)placePrice, "tPrice");
+
+                    ArrayList<Pair> pairs = new ArrayList<>();
+                    pairs.add(namePair);
+                    pairs.add(coursePair);
+                    pairs.add(pricePair);
+
+                    ActivityOptionsCompat options =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(SearchActivity.this, namePair,coursePair,pricePair);
+
+                    ActivityCompat.startActivity(v.getContext(), intent, options.toBundle());
+                }
             }
 
             @Override
@@ -101,7 +129,6 @@ public class SearchActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 posts.clear();
                 mSpinner.setVisibility(View.GONE);
-                Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     Post nPost = postSnapshot.getValue(Post.class);
                     posts.add(nPost);
@@ -110,7 +137,7 @@ public class SearchActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Cancelled", "Post query request cancelled.");
+                Log.e(TAG, "Post query request cancelled.");
             }
         });
     }

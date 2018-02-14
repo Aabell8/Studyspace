@@ -34,6 +34,8 @@ import java.util.List;
 
 public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = "PostSearchRecyclerAdapter";
+
     private List<Post> posts;
 
     private Context mContext;
@@ -42,7 +44,7 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     public PostSearchRecyclerAdapter(Context context, List<Post> posts,
                                      SearchPostClickListener itemListener) {
         this.mContext = context;
-        this.itemListener = itemListener;
+        PostSearchRecyclerAdapter.itemListener = itemListener;
         this.posts = posts;
     }
 
@@ -85,7 +87,7 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("PostSearch: ", "Failed to retrieve applied value");
+                Log.e(TAG, "Failed to retrieve applied value");
             }
         });
 
@@ -112,7 +114,7 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("PostSearch", "Error retrieving user");
+                Log.e(TAG, "Error retrieving user");
             }
         });
 
@@ -155,13 +157,13 @@ public class PostSearchRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
         PostSearchViewHolder(View view) {
             super(view);
-            regularLayout = view.findViewById(R.id.item_post);
-            profilePic = view.findViewById(R.id.iv_post_item);
-            name = view.findViewById(R.id.post_name);
-            course = view.findViewById(R.id.post_course);
-            description = view.findViewById(R.id.post_description);
-            price = view.findViewById(R.id.post_price);
-            applyButton = view.findViewById(R.id.btn_apply);
+            regularLayout = view.findViewById(R.id.linear_layout_post_details);
+            profilePic = view.findViewById(R.id.image_post);
+            name = view.findViewById(R.id.text_name);
+            course = view.findViewById(R.id.text_course);
+            description = view.findViewById(R.id.text_description);
+            price = view.findViewById(R.id.text_price);
+            applyButton = view.findViewById(R.id.button_apply);
 
         }
 

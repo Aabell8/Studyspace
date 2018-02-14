@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +20,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.austinabell8.studyspace.activities.Tutor.PostDetailsActivity;
 import com.austinabell8.studyspace.R;
 import com.austinabell8.studyspace.activities.Tutor.PostSearchInputActivity;
 import com.austinabell8.studyspace.adapters.Tutor.PostApplicationsRecyclerAdapter;
@@ -73,7 +78,7 @@ public class TPostsFragment extends Fragment implements View.OnClickListener {
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mPostRef = mRootRef.child("posts");
 
-        mRecyclerView = inflatedPosts.findViewById(R.id.rvPosts);
+        mRecyclerView = inflatedPosts.findViewById(R.id.rv_posts);
 
         mRecyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity());
@@ -84,6 +89,37 @@ public class TPostsFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setLayoutManager(llm);
 
         mPosts = new ArrayList<>();
+
+        mRecyclerViewClickListener = new RecyclerViewClickListener() {
+            @Override
+            public void recyclerViewListClicked(View v, int position) {
+                if (position != -1){
+                    //Retrieve Id from item clicked, and pass it into an intent
+                    Intent intent = new Intent(v.getContext(), PostDetailsActivity.class);
+                    intent.putExtra("post_intent", mPosts.get(position));
+                    TextView placeName = v.findViewById(R.id.text_name);
+                    TextView placeCourse = v.findViewById(R.id.text_course);
+                    TextView placePrice = v.findViewById(R.id.text_price);
+
+                    Pair<View,String> namePair = Pair.create((View)placeName, "tName");
+                    Pair<View,String> coursePair = Pair.create((View)placeCourse, "tCourse");
+                    Pair<View,String> pricePair = Pair.create((View)placePrice, "tPrice");
+
+                    ArrayList<Pair> pairs = new ArrayList<>();
+                    pairs.add(namePair);
+                    pairs.add(coursePair);
+                    pairs.add(pricePair);
+
+                    ActivityOptionsCompat options =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), namePair,coursePair,pricePair);
+
+                    ActivityCompat.startActivity(v.getContext(), intent, options.toBundle());
+                }
+            }
+            @Override
+            public void recyclerViewListLongClicked(View v, int position) {
+            }
+        };
 
         mPostRecyclerAdapter = new PostApplicationsRecyclerAdapter(getContext(), mPosts, mRecyclerViewClickListener);
         mRecyclerView.setAdapter(mPostRecyclerAdapter);
@@ -132,7 +168,7 @@ public class TPostsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        mFab = getActivity().findViewById(R.id.fab);
+        mFab = inflatedPosts.findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 SearchPost();

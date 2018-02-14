@@ -79,10 +79,13 @@
             android:name=".activities.Tutor.PostSearchInputActivity"
             android:parentActivityName=".activities.Tutor.TutorActivity" />
         <activity
+            android:name=".activities.Tutor.PostDetailsActivity"
+            android:parentActivityName=".activities.Tutor.TutorActivity" />
+        <activity
             android:name=".activities.Student.ApplicantListActivity"
             android:parentActivityName=".activities.Student.StudentActivity" />
         <activity android:name=".activities.UserDetailsActivity" />
-        <activity android:name=".activities.ConversationActivity"></activity>
+        <activity android:name=".activities.ConversationActivity" />
     </application>
 
 </manifest>

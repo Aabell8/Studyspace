@@ -7,20 +7,7 @@
     tools:context="com.austinabell8.studyspace.activities.Tutor.SearchActivity"
     android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/AppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@color/colorPrimary"
-            android:minHeight="?attr/actionBarSize"/>
-
-    </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/ab_layout"/>
 
     <View
         android:layout_width="wrap_content"
@@ -34,7 +21,7 @@
         android:layout_marginBottom="40dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp">
-        <EditText android:id="@+id/search_text"
+        <EditText android:id="@+id/edit_text_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorPrimary"
@@ -43,19 +30,9 @@
             android:hint="@string/Search" />
     </android.support.design.widget.TextInputLayout>
 
-    <!--<Spinner-->
-        <!--android:id="@+id/course_spinner"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:entries="@array/subject_arrays"-->
-        <!--android:prompt="@string/subject_prompt"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--/>-->
 
     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-        android:id="@+id/course_spinner"
+        android:id="@+id/spinner_course"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -63,7 +40,7 @@
         android:layout_marginRight="8dp" />
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/search_button"
+        android:id="@+id/button_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search"

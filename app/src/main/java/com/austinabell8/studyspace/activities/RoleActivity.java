@@ -17,6 +17,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RoleActivity extends AppCompatActivity {
 
+    private static final String TAG = "RoleActivity";
+
     private FirebaseAuth mFirebaseAuth;
 
     private Button mStudentButton;
@@ -34,8 +36,8 @@ public class RoleActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Role Selection");
         }
-        mStudentButton = findViewById(R.id.student_button);
-        mTutorButton = findViewById(R.id.tutor_button);
+        mStudentButton = findViewById(R.id.button_student);
+        mTutorButton = findViewById(R.id.button_tutor);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 

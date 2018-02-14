@@ -2,7 +2,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
     tools:context="com.austinabell8.studyspace.activities.LoginActivity">
@@ -14,15 +13,13 @@
         android:paddingTop="46dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
-        <TextView
-            android:text="@string/app_name"
-            android:fontFamily="@font/league_spartan_bold"
-            android:textSize="20pt"
-            android:textColor="@color/md_white_1000"
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="72dp"
-            android:layout_marginBottom="24dp"
-            android:layout_gravity="center_horizontal" />
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="18dp"
+            android:src="@drawable/studyspace_logo"/>
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
@@ -31,12 +28,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:theme="@style/TextLabel">
-            <EditText android:id="@+id/input_email"
+            <EditText android:id="@+id/edit_text_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
                 android:inputType="textEmailAddress"
-                android:hint="Email" />
+                android:hint="@string/email_tag" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
@@ -46,16 +43,16 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:theme="@style/TextLabel">
-            <EditText android:id="@+id/input_password"
+            <EditText android:id="@+id/edit_text_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
                 android:inputType="textPassword"
-                android:hint="Password"/>
+                android:hint="@string/password_tag"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/login_button"
+            android:id="@+id/button_login"
             android:textSize="16sp"
             android:textAllCaps="true"
             android:backgroundTint="@color/colorPrimaryDark"
@@ -69,7 +66,7 @@
             android:text="@string/sign_in"/>
 
         <com.facebook.login.widget.LoginButton
-            android:id="@+id/facebook_login_button"
+            android:id="@+id/button_facebook_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
@@ -82,7 +79,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp" />
 
-        <TextView android:id="@+id/signup_link"
+        <TextView android:id="@+id/text_sign_up"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/md_white_1000"

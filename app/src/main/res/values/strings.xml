@@ -3,7 +3,7 @@
     <string name="facebook_app_id">326384861170355</string>
     <string name="fb_login_protocol_scheme">fb875333829286542</string>
 
-    <string name="authenticating">Authenticating...</string>
+    <string name="authenticating">Authenticating…</string>
     <string name="password">Password</string>
     <string name="creating_user">Creating User</string>
     <string name="sign_in">Sign In</string>
@@ -37,6 +37,26 @@
     <string name="search">Search</string>
     <string name="send_button_description">send_button</string>
     <string name="message_prompt">Write a message</string>
+    <string name="alice_filler_text">\tHello, my name is Alice and I am currently a graduate student
+    in economics. I would like to tutor in my free time in order to help in my goal of
+    becoming a teacher! I have been helping students with assignments and exams for around 2 years.
+     I am very friendly and will hopefully provide a stress-free tutoring session to anyone
+        seeking my help!</string>
+    <string name="message">Message</string>
+    <string name="rating_max">/5.0</string>
+    <string name="per_hour">/hr</string>
+    <string name="heard_about_text">How did you hear about us? (Optional)</string>
+    <string name="create_account_tag">Create Account</string>
+    <string name="already_a_member_login_tag">Already a member? Login</string>
+    <string name="re_enter_password_tag">Re-enter Password</string>
+    <string name="password_tag">Password</string>
+    <string name="age_optional_tag">Age (Optional)</string>
+    <string name="email_tag">Email</string>
+    <string name="username_tag">Username</string>
+    <string name="name_tag">Name</string>
+    <string name="what_help_do_you_need">What help do you need?</string>
+    <string name="price">Price</string>
+    <string name="request_tutor">Request Tutor</string>
 
     <string-array name="subject_arrays">
         <item>BUSINESS 2257</item>
