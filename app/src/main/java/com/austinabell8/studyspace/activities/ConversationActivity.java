@@ -51,6 +51,7 @@ public class ConversationActivity extends AppCompatActivity {
     // Firebase instance variables
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
+    private DatabaseReference mPreviewDatabaseReference;
     private ChildEventListener mChildEventListener;
 
     @Override
@@ -104,6 +105,7 @@ public class ConversationActivity extends AppCompatActivity {
         if(conversationId!=null && !conversationId.equals("")){
             mMessagesDatabaseReference = mFirebaseDatabase.getReference()
                     .child("conversations").child(conversationId).child("messages");
+            mPreviewDatabaseReference = mMessagesDatabaseReference.getParent().child("preview");
             mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
         }
         else if (recipientId!=null && !recipientId.equals("")) {
@@ -121,6 +123,7 @@ public class ConversationActivity extends AppCompatActivity {
                                     .child(convSnap.getKey())
                                     .child("messages");
                             mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+                            mPreviewDatabaseReference = mMessagesDatabaseReference.getParent().child("preview");
                         }
                     }
                     if (mMessagesDatabaseReference==null){
@@ -139,6 +142,7 @@ public class ConversationActivity extends AppCompatActivity {
                                 .child(newId)
                                 .child("messages");
                         mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+                        mPreviewDatabaseReference = mMessagesDatabaseReference.getParent().child("preview");
                     }
 
                 }
@@ -199,9 +203,15 @@ public class ConversationActivity extends AppCompatActivity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Message friendlyMessage = new Message(mMessageEditText.getText().toString(),
-                        null, FirebaseAuth.getInstance().getCurrentUser().getUid());
-                mMessagesDatabaseReference.push().setValue(friendlyMessage);
+                String textInput = mMessageEditText.getText().toString();
+                if (mMessagesDatabaseReference!=null){
+                    Message friendlyMessage = new Message(textInput,
+                            null, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    mMessagesDatabaseReference.push().setValue(friendlyMessage);
+                }
+                if(mPreviewDatabaseReference!=null){
+                    mPreviewDatabaseReference.setValue(textInput);
+                }
 
                 // Clear input box
                 mMessageEditText.setText("");

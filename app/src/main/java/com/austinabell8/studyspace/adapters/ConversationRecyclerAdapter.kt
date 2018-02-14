@@ -22,17 +22,17 @@ class ConversationRecyclerAdapter(context: Context, results: List<Conversation>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val mView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.conversation_list_item, parent, false)
+                .inflate(R.layout.item_conversation, parent, false)
         return SearchViewHolder(mView)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val r = mResults[position]
+        val conversation = mResults[position]
         val rHolder = holder as SearchViewHolder
 
         //Update data in SearchViewHolder
-        rHolder.name.text = r.from
-        rHolder.preview.text = r.preview
+        rHolder.name.text = conversation.from
+        rHolder.preview.text = conversation.preview
         rHolder.regularLayout.setOnClickListener { v -> itemListener.recyclerViewListClicked(v, rHolder.layoutPosition) }
 
 //        if (r.photoUrl!=null){

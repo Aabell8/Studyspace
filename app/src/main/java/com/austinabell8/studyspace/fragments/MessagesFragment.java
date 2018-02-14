@@ -92,9 +92,16 @@ public class MessagesFragment extends Fragment implements View.OnClickListener {
         mConversationRecyclerAdapter = new ConversationRecyclerAdapter(getContext(), conversations, mRecyclerViewClickListener);
         mRecyclerView.setAdapter(mConversationRecyclerAdapter);
 //        fillDummyData();
-        retrieveConversations();
+//        retrieveConversations();
 
         return inflatedMessages;
+    }
+
+    // Refreshing on resume definitely isn't the best option, change
+    @Override
+    public void onResume() {
+        super.onResume();
+        retrieveConversations();
     }
 
     @Override
@@ -119,15 +126,6 @@ public class MessagesFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void fillDummyData(){
-        Conversation c = new Conversation(
-                UUID.randomUUID().toString(),
-                "Austin Abell",
-                "Want to meet up at Weldon at 6pm?");
-        conversations.add(c);
-        mConversationRecyclerAdapter.notifyDataSetChanged();
-    }
-
     private void retrieveConversations() {
         DatabaseReference conversationRef =  mRootRef.child("conversations");
         conversationRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -140,12 +138,13 @@ public class MessagesFragment extends Fragment implements View.OnClickListener {
                             if (!convDetails.getKey().equals(mCurrentUserId)
                                     && !convDetails.getKey().equals("conversationId")
                                     && !convDetails.getKey().equals("messages")
-                                    && !convDetails.getKey().equals("preview")){ //TODO: preview may change
+                                    && !convDetails.getKey().equals("preview")) {
                                 String conversationId =
                                         convItem.child("conversationId").getValue(String.class);
                                 String otherName = convDetails.getValue(String.class);
+                                String preview = convItem.child("preview").getValue(String.class);
                                 Conversation newConversation =
-                                        new Conversation(conversationId, otherName, "");
+                                        new Conversation(conversationId, otherName, preview);
                                 conversations.add(newConversation);
                                 break;
                             }
